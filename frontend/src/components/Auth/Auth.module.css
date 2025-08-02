@@ -1,0 +1,19 @@
+.authBanner {
+    width: 100vw;
+    height: 350px;
+    background-color: var(--main-blue);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.authBanner h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.authBanner p {
+    font-size: 1.4rem;
+}
