@@ -8,10 +8,22 @@
     justify-content: center;
     align-items: center;
 }
+
 .mainBanner h1 {
     font-size: 3.7rem;
     font-weight: 700;
 }
+
 .mainBanner p {
     font-size: 1.5rem;
+}
+
+.mainBanner button {
+    padding: 15px 30px;
+    background-color: #fff;
+    color: var(--main-blue);
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 9999px;
 }
