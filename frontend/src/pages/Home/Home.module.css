@@ -1,0 +1,17 @@
+.mainBanner {
+    width: 100vw;
+    height: 600px;
+    background-color: var(--main-blue);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.mainBanner h1 {
+    font-size: 3.7rem;
+    font-weight: 700;
+}
+.mainBanner p {
+    font-size: 1.5rem;
+}
