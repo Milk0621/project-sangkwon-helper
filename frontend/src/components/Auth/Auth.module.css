@@ -17,3 +17,30 @@
 .authBanner p {
     font-size: 1.4rem;
 }
+
+.form {
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    max-width: 400px;
+    width: 40%;
+    margin: 0 auto;
+    border-radius: 0.75rem;
+}
+
+.btnDiv {
+    background-color: var(--bg-gray);
+    display: flex;
+    border-radius: 9999px;
+    padding: .3rem;
+}
+
+.btnDiv button {
+    width: 100%;
+    border-radius: 9999px;
+    padding: .5rem .1rem;
+}
+
+.btnDiv .active {
+    background-color: var(--main-blue);
+    color: #fff;
+}
