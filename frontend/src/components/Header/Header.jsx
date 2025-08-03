@@ -4,6 +4,7 @@ import styles from './Header.module.css';
 function Header() {
     return(
         <header className={styles.header}>
+            <div>
                 <div className={styles.logo}>
                     <Link to="/">상권도우미</Link>
                 </div>
@@ -16,6 +17,7 @@ function Header() {
                 <nav className={styles.nav}>
                     <Link to="/auth">로그인</Link>
                 </nav>
+            </div>
         </header>
     )
 }

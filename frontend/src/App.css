@@ -48,6 +48,11 @@
   box-sizing: border-box;
 }
 
+button {
+  border: none;
+  background: none;
+}
+
 .App {
   min-height: 100vh;
   text-align: center;
