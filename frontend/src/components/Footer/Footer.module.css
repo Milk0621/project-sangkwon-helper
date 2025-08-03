@@ -1,12 +1,17 @@
 footer {
     background-color: var(--dark-blue);
     color: #9ca3af;
-    padding: 2.5rem 15rem;
+    padding: 2.5rem 5rem;
     text-align: left;
     font-size: .85rem;
 }
 
 footer>div {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.gridDiv {
     display: grid;
     justify-items: center;
     grid-template-columns: repeat(4, minmax(0, 1fr));
