@@ -5,8 +5,13 @@ function Footer() {
         <footer>
             <div>
                 <div>
-                    <h4>상권분석</h4>
-                    <p>지역 상권분석 플랫폼으로 <br /> 성공적인 창업을 도와드립니다</p>
+                    <div className={styles.logo}>
+                        <div className={styles.kor}>
+                            상권<span className={styles.blue}>도우미</span>
+                        </div>
+                        <div className={styles.eng}>COMMERCIAL HELPER</div>
+                        <div>지역 상권분석 플랫폼으로 성공적인 <br/> 창업을 도와드립니다</div>
+                    </div>
                 </div>
                 <div>
                     <h5>서비스</h5>

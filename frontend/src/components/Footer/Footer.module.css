@@ -1,17 +1,35 @@
 footer {
     background-color: var(--dark-blue);
     color: #9ca3af;
-    padding: 2.5rem 5rem;
+    padding: 2.5rem 15rem;
     text-align: left;
     font-size: .85rem;
 }
 
 footer>div {
     display: grid;
+    justify-items: center;
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-footer h4, footer h5 {
+.kor {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+}
+
+.blue {
+  color: var(--main-blue);
+}
+
+.eng {
+  font-size: .75rem;
+  font-weight: 400;
+  color: #ffffff2e;
+}
+
+footer h5 {
     font-size: .95rem;
     font-weight: 500;
     color: #fff;
