@@ -1,9 +1,9 @@
 .header {
-    background-color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 5px 5px -5px #333;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 5px 5px -5px #333;
 }
 
 .header>div {
@@ -24,14 +24,25 @@
   padding: 8px 12px;
 }
 
-.logo a {
-    font-size: 1.3rem !important;
-    font-weight: bold;
+.kor {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.blue {
+  color: var(--main-blue);
+}
+
+.eng {
+  font-size: .9rem;
+  font-weight: 400;
+  color: #555;
 }
 
 .nav {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .nav a:hover {

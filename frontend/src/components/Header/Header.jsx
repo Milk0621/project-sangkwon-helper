@@ -6,7 +6,12 @@ function Header() {
         <header className={styles.header}>
             <div>
                 <div className={styles.logo}>
-                    <Link to="/">상권도우미</Link>
+                    <Link to="/">
+                        <div className={styles.kor}>
+                            상권<span className={styles.blue}>도우미</span>
+                        </div>
+                        <div className={styles.eng}>COMMERCIAL HELPER</div>
+                    </Link>
                 </div>
                 <nav className={styles.nav}>
                     <Link to="/">홈</Link>
