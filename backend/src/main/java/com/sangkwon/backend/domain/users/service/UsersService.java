@@ -1,7 +1,7 @@
 package com.sangkwon.backend.domain.users.service;
 
-import com.sangkwon.backend.domain.users.model.Users;
+import com.sangkwon.backend.domain.users.dto.UserRegisterRequestDTO;
 
 public interface UsersService {
-	void register(Users users);
+	void register(UserRegisterRequestDTO dto);
 }
