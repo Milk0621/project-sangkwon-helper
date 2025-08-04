@@ -7,6 +7,8 @@ public class UserRegisterRequestDTO {
 	private String number;
 	private String industry;
 	
+	public UserRegisterRequestDTO() {}
+	
 	public UserRegisterRequestDTO(String email, String password, String name, String number, String industry) {
 		super();
 		this.email = email;
