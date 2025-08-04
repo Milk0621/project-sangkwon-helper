@@ -98,3 +98,9 @@
 .text i {
     margin-right: .5rem;
 }
+
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+}

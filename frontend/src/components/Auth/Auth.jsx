@@ -14,37 +14,74 @@ function Auth() {
 
     const [errors, setErrors] = useState({});
 
-    // 유효성 검사
-    const validation = () => {
-        const newErrors = {};
+    // 이름 실시간 유효성 검사
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+        setName(value);
 
-        if (!/^[가-힣]{2,10}$/.test(name)) {
-            newErrors.name = "이름은 한글 2~10자로 입력해주세요.";
+        if (!/^[가-힣]{2,10}$/.test(value)) {
+            setErrors(prev => ({ ...prev, name: '이름은 한글 2~10자로 입력해주세요.' }));
+        } else {
+            setErrors(prev => ({ ...prev, name: null }));
         }
+    };
 
-        if (!/^010-\d{4}-\d{4}$/.test(number)) {
-            newErrors.number = '휴대폰 번호는 010-0000-0000 형식으로 입력해주세요.';
+    const handleNumberChange = (e) => {
+        const value = e.target.value;
+        setNumber(value);
+
+        if (value === ''){
+            setErrors(prev => ({ ...prev, number: null }));
+        } else if (!/^010-\d{4}-\d{4}$/.test(value)) {
+            setErrors(prev => ({ ...prev, number: '휴대폰 번호는 010-0000-0000 형식으로 입력해주세요.' }));
+        } else {
+            setErrors(prev => ({ ...prev, number: null }));
         }
+    };
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            newErrors.email = '이메일 형식이 올바르지 않습니다.';
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        setEmail(value);
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            setErrors(prev => ({ ...prev, email: '이메일 형식이 올바르지 않습니다.' }));
+        } else {
+            setErrors(prev => ({ ...prev, email: null }));
         }
+    };
 
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
-            newErrors.password = '비밀번호는 영문과 숫자 조합 8자 이상이어야 합니다.';
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        setPassword(value);
+
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
+            setErrors(prev => ({ ...prev, password: '비밀번호는 영문과 숫자 조합 8자 이상이어야 합니다.' }));
+        } else {
+            setErrors(prev => ({ ...prev, password: null }));
         }
+    };
 
-        if (password !== confirmPassword) {
-            newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+    const handleConfirmPasswordChange = (e) => {
+        const value = e.target.value;
+        setConfirmPassword(value);
+
+        if (password !== value) {
+            setErrors(prev => ({ ...prev, confirmPassword: '비밀번호가 일치하지 않습니다.' }));
+        } else {
+            setErrors(prev => ({ ...prev, confirmPassword: null }));
         }
+    };    
 
-        if (!industry) {
-            newErrors.industry = '관심 업종을 선택해주세요.';
+    const handleIndustryChange = (e) => {
+        const value = e.target.value;
+        setIndustry(value);
+
+        if (value === ''){
+            setErrors(prev => ({ ...prev, industry: null }));
+        } else {
+            setErrors(prev => ({ ...prev, industry: null }));
         }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    }
+    };   
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -54,9 +91,6 @@ function Auth() {
             console.log('로그인 시도:', email, password);
             return;
         }
-
-        // 회원가입 유효성 검사
-        if (!validation()) return;
 
         // 모든 유효성 통과 시 처리
         console.log('회원가입 성공:', { name, number, email, password, industry });
@@ -85,8 +119,9 @@ function Auth() {
                                 type="text"
                                 placeholder='이름을 입력하세요' 
                                 value={name}
-                                onChange={(e)=>setName(e.target.value)}
+                                onChange={handleNameChange}
                             />
+                            {errors.name && <p className={styles.error}>{errors.name}</p>}
                         </div>
                         <div className={styles.inputBox}>
                             <label>휴대폰 번호</label>
@@ -94,12 +129,13 @@ function Auth() {
                                 type="tel"
                                 placeholder='010-0000-0000'
                                 value={number}
-                                onChange={(e)=>setNumber(e.target.value)}
+                                onChange={handleNumberChange}
                             />
+                            {errors.number && <p className={styles.error}>{errors.number}</p>}
                         </div>
                         <div className={styles.inputBox}>
                             <label>관심 업종</label>
-                            <select value={industry} onChange={(e)=>setIndustry(e.target.value)}>
+                            <select value={industry} onChange={handleIndustryChange}>
                                 <option value="">선택하세요</option>
                                 <option value="카페">카페</option>
                                 <option value="음식점">음식점</option>
@@ -110,6 +146,7 @@ function Auth() {
                                 <option value="의류점">의류점</option>
                                 <option value="기타">기타</option>
                             </select>
+                            {errors.industry && <p className={styles.error}>{errors.industry}</p>}
                         </div>
                         </>
                     )}
@@ -121,17 +158,19 @@ function Auth() {
                             type="email"
                             placeholder='example@email.com'
                             value={email}
-                            onChange={(e)=>setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                         />
+                        {errors.email && <p className={styles.error}>{errors.email}</p>}
                     </div>
                     <div className={styles.inputBox}>
                         <label>비밀번호 <span>*</span></label>
                         <input 
                             type="password"
                             placeholder='비밀번호를 입력하세요'
-                            value={email}
-                            onChange={(e)=>setPassword(e.target.value)}
+                            value={password}
+                            onChange={handlePasswordChange}
                         />
+                        {errors.password && <p className={styles.error}>{errors.password}</p>}
                     </div>
 
                     {!isLogin && (
@@ -140,9 +179,10 @@ function Auth() {
                             <input 
                                 type="password" 
                                 placeholder='비밀번호를 다시 입력하세요'
-                                value={password}
-                                onChange={(e)=>setConfirmPassword(e.target.value)}
+                                value={confirmPassword}
+                                onChange={handleConfirmPasswordChange}
                             />
+                            {errors.confirmPassword && <p className={styles.error}>{errors.confirmPassword}</p>}
                         </div>
                     )}
                     <button type="submit">{isLogin ? '로그인' : '회원가입'}</button>
