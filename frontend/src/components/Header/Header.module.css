@@ -4,6 +4,7 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 5px 5px -5px #333;
+  padding: 0 1.3rem;
 }
 
 .header>div {
@@ -28,7 +29,7 @@
 }
 
 .kor {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -38,7 +39,7 @@
 }
 
 .eng {
-  font-size: .9rem;
+  font-size: .75rem;
   font-weight: 400;
   color: #555;
 }
