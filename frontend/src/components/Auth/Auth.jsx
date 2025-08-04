@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './Auth.module.css';
+import api from '../../api/api';
 
 function Auth() {
     const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +13,7 @@ function Auth() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const [errors, setErrors] = useState({});
 
     // 이름 실시간 유효성 검사
@@ -19,7 +21,9 @@ function Auth() {
         const value = e.target.value;
         setName(value);
 
-        if (!/^[가-힣]{2,10}$/.test(value)) {
+        if (value === '') {
+            setErrors(prev => ({ ...prev, name: null}));
+        } else if (!/^[가-힣]{2,10}$/.test(value)) {
             setErrors(prev => ({ ...prev, name: '이름은 한글 2~10자로 입력해주세요.' }));
         } else {
             setErrors(prev => ({ ...prev, name: null }));
@@ -45,7 +49,9 @@ function Auth() {
         const value = e.target.value;
         setEmail(value);
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        if (value === ''){
+            setErrors(prev => ({ ...prev, email: null}));
+        }else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
             setErrors(prev => ({ ...prev, email: '이메일 형식이 올바르지 않습니다.' }));
         } else {
             setErrors(prev => ({ ...prev, email: null }));
@@ -57,7 +63,9 @@ function Auth() {
         const value = e.target.value;
         setPassword(value);
 
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
+        if (value === '') {
+            setErrors(prev => ({ ...prev, password: null}));
+        } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
             setErrors(prev => ({ ...prev, password: '비밀번호는 영문과 숫자 조합 8자 이상이어야 합니다.' }));
         } else {
             setErrors(prev => ({ ...prev, password: null }));
@@ -69,7 +77,9 @@ function Auth() {
         const value = e.target.value;
         setConfirmPassword(value);
 
-        if (password !== value) {
+        if (value === '') {
+            setErrors(prev => ({ ...prev, confirmPassword: null}));
+        } else if (password !== value) {
             setErrors(prev => ({ ...prev, confirmPassword: '비밀번호가 일치하지 않습니다.' }));
         } else {
             setErrors(prev => ({ ...prev, confirmPassword: null }));
@@ -90,6 +100,7 @@ function Auth() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setIsSubmitted(true);
 
         if (isLogin) {
             // 로그인 로직은 따로 처리
@@ -97,8 +108,55 @@ function Auth() {
             return;
         }
 
+        // 필수값 누락 시 유효성 검사
+        const newErrors = {};
+        if (!name || !email || !password || !confirmPassword) {
+            if (!name) newErrors.name = '이름을 입력해주세요.';
+            if (!email) newErrors.email = '이메일을 입력해주세요.';
+            if (!password) newErrors.password = '비밀번호를 입력해주세요.';
+            if (!confirmPassword) newErrors.confirmPassword = '비밀번호 확인을 입력해주세요.';
+            setErrors(prev => ({ ...prev, ...newErrors }));
+            return;
+        }
+
+        // 에러가 있으면 제출 막기
+        const hasError = Object.values({ ...errors, ...newErrors }).some(error => error !== null);
+        if (hasError) {
+            console.log('회원가입 실패: 유효성 검사 통과 못함');
+            return;
+        }
+
         // 모든 유효성 통과 시 처리
-        console.log('회원가입 성공:', { name, number, email, password, industry });
+        const fetchRegister = async () => {
+            try {
+                const res = await api.post("/users/auth/register", {
+                    email,
+                    password,
+                    name,
+                    number,
+                    industry
+                })
+                console.log("회원가입 요청 성공", res);
+                setName('');
+                setNumber('');
+                setIndustry('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+                setIsLogin(true);
+            } catch (err) {
+                const message = err.response?.data;
+
+                if (message === "이미 사용 중인 이메일입니다.") {
+                    setErrors(prev => ({ ...prev, email: message }));
+                } else if (message === "이미 사용 중인 이름입니다.") {
+                    setErrors(prev => ({ ...prev, name: message }));
+                } else {
+                    console.error("회원가입 요청 실패", err);
+                }
+            }
+        }
+        fetchRegister();
     };
 
     return(
@@ -111,8 +169,8 @@ function Auth() {
             <div>
                 <form className={styles.form} onSubmit={handleSubmit}>
                     <div className={styles.btnDiv}>
-                        <button className={isLogin && styles.active} onClick={()=>setIsLogin(true)}>로그인</button>
-                        <button className={!isLogin && styles.active} onClick={()=>setIsLogin(false)}>회원가입</button>
+                        <button type='button' className={isLogin && styles.active} onClick={()=>setIsLogin(true)}>로그인</button>
+                        <button type='button' className={!isLogin && styles.active} onClick={()=>setIsLogin(false)}>회원가입</button>
                     </div>
 
                     {/* 회원가입 폼 */}
@@ -126,7 +184,7 @@ function Auth() {
                                 value={name}
                                 onChange={handleNameChange}
                             />
-                            {errors.name && <p className={styles.error}>{errors.name}</p>}
+                            {(errors.name && (isSubmitted || name)) && <p className={styles.error}>{errors.name}</p>}
                         </div>
                         <div className={styles.inputBox}>
                             <label>휴대폰 번호</label>
@@ -136,7 +194,7 @@ function Auth() {
                                 value={number}
                                 onChange={handleNumberChange}
                             />
-                            {errors.number && <p className={styles.error}>{errors.number}</p>}
+                            {(errors.number && (isSubmitted || number)) && <p className={styles.error}>{errors.number}</p>}
                         </div>
                         <div className={styles.inputBox}>
                             <label>관심 업종</label>
@@ -151,7 +209,7 @@ function Auth() {
                                 <option value="의류점">의류점</option>
                                 <option value="기타">기타</option>
                             </select>
-                            {errors.industry && <p className={styles.error}>{errors.industry}</p>}
+                            {(errors.industry && (isSubmitted || industry)) && <p className={styles.error}>{errors.industry}</p>}
                         </div>
                         </>
                     )}
@@ -165,7 +223,7 @@ function Auth() {
                             value={email}
                             onChange={handleEmailChange}
                         />
-                        {errors.email && <p className={styles.error}>{errors.email}</p>}
+                        {(errors.email && (isSubmitted || email)) && <p className={styles.error}>{errors.email}</p>}
                     </div>
                     <div className={styles.inputBox}>
                         <label>비밀번호 <span>*</span></label>
@@ -175,7 +233,7 @@ function Auth() {
                             value={password}
                             onChange={handlePasswordChange}
                         />
-                        {errors.password && <p className={styles.error}>{errors.password}</p>}
+                        {(errors.password && (isSubmitted || password)) && <p className={styles.error}>{errors.password}</p>}
                     </div>
 
                     {!isLogin && (
@@ -187,7 +245,7 @@ function Auth() {
                                 value={confirmPassword}
                                 onChange={handleConfirmPasswordChange}
                             />
-                            {errors.confirmPassword && <p className={styles.error}>{errors.confirmPassword}</p>}
+                            {(errors.confirmPassword && (isSubmitted || confirmPassword)) && <p className={styles.error}>{errors.confirmPassword}</p>}
                         </div>
                     )}
                     <button type="submit">{isLogin ? '로그인' : '회원가입'}</button>
