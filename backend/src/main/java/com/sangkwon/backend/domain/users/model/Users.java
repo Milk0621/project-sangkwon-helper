@@ -2,13 +2,33 @@ package com.sangkwon.backend.domain.users.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class Users {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Column(nullable = false, unique = true, length = 100)
 	private String email;
+	
+	@Column(nullable = false, length = 100)
 	private String password;
+	
+	@Column(nullable = false, length = 10)
 	private String name;
+	
 	private String number;
 	private String industry;
+	
 	private LocalDateTime create_at;
 	private LocalDateTime delete_at;
 	
