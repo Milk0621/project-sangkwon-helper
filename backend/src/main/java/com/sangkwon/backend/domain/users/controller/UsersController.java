@@ -1,6 +1,8 @@
 package com.sangkwon.backend.domain.users.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +19,8 @@ public class UsersController {
 	private UsersService usersSerivce;
 	
 	@PostMapping("/auth/register")
-	public String register(@RequestBody UserRegisterRequestDTO requestDTO) {
+	public ResponseEntity<?> register(@RequestBody UserRegisterRequestDTO requestDTO) {
 		usersSerivce.register(requestDTO);
-		return "회원가입 성공";
+		return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
 	}
 }
