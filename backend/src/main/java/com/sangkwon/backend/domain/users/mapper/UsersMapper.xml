@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sangkwon.backend.domain.users.mapper.UsersMapper">
 	
-	<insert id="insertUser" parameterType="com.sangkwon.backend.domain.users.model.Users">
+	<insert id="insertUser" parameterType="Users">
 		insert into users (email, password, name, number, industry, created_at)
 		values (#{email}, #{password}, #{name}, #{number}, #{industry}, now())
 	</insert>	
