@@ -26,6 +26,7 @@ function Auth() {
         }
     };
 
+    // 전화번호 실시간 유효성 검사
     const handleNumberChange = (e) => {
         const value = e.target.value;
         setNumber(value);
@@ -39,6 +40,7 @@ function Auth() {
         }
     };
 
+    // 이메일 실시간 유효성 검사
     const handleEmailChange = (e) => {
         const value = e.target.value;
         setEmail(value);
@@ -50,6 +52,7 @@ function Auth() {
         }
     };
 
+    // 비밀번호 실시간 유효성 검사
     const handlePasswordChange = (e) => {
         const value = e.target.value;
         setPassword(value);
@@ -61,6 +64,7 @@ function Auth() {
         }
     };
 
+    // 비밀번호 확인 실시간 유효성 검사
     const handleConfirmPasswordChange = (e) => {
         const value = e.target.value;
         setConfirmPassword(value);
@@ -72,6 +76,7 @@ function Auth() {
         }
     };    
 
+    // 관심 업종 유효성 검사
     const handleIndustryChange = (e) => {
         const value = e.target.value;
         setIndustry(value);
