@@ -29,13 +29,12 @@ public class JwtTokenProvider {
 	}
 	
 	// Access Token 생성
-	public String generateAccessToken(String email, String role) {
+	public String generateAccessToken(String email) {
 		Date now = new Date();
 		Date expiry = new Date(now.getTime() + accessTokenExpiration);
 		
 		return Jwts.builder()
 				.setSubject(email)			// sub: 사용자 식별자
-				.claim("role", role)		// custom claim: 사용자 권한
 				.setIssuedAt(now)			// iat: 발급 시간
 				.setExpiration(expiry)		// exp: 만료 시간
 				.signWith(key, SignatureAlgorithm.HS256) // 서명 알고리즘과 키 설정
