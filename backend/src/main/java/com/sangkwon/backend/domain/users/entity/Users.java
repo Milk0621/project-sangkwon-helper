@@ -1,4 +1,4 @@
-package com.sangkwon.backend.domain.users.model;
+package com.sangkwon.backend.domain.users.entity;
 
 import java.time.LocalDateTime;
 
