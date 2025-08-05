@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -50,6 +52,30 @@ public class JwtTokenProvider {
 				.setExpiration(expiry)
 				.signWith(key, SignatureAlgorithm.HS256)
 				.compact();
+	}
+	
+	// 토큰 유효성 검사
+	public boolean validateToken(String token) {
+		try {
+			Jwts.parserBuilder()		// 서명 위조, 만료시간 검증 => 위반 시 JwtException 발생
+				.setSigningKey(key)		// 서명 검증
+				.build()
+				.parseClaimsJws(token);	// 토큰이 유요한지 검증
+			return true;
+		} catch (JwtException | IllegalArgumentException e) {
+			return false;				// 위조되었거나 만료됨
+		}
+	}
+	
+	// 토큰에서 이메일 추출
+	public String getUserEmailFromToken(String token) {
+		Claims claims = Jwts.parserBuilder()
+							.setSigningKey(key)
+							.build()
+							.parseClaimsJws(token)
+							.getBody();	// Payload 부분 추출
+		
+		return claims.getSubject(); // sub: 사용자 식별자 (email)
 	}
 
 }
