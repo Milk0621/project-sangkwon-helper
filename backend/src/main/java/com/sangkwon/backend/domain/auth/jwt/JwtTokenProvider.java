@@ -1,4 +1,4 @@
-package com.sangkwon.backend.jwt;
+package com.sangkwon.backend.domain.auth.jwt;
 
 import java.security.Key;
 import java.util.Date;
