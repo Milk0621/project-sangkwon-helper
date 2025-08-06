@@ -106,8 +106,19 @@ public class AuthServiceImpl implements AuthService {
 	    }
 		
 		// 새 Access Token 발급
+	    String newAccessToken = jwtTokenProvider.generateAccessToken(saved.getEmail());
+
+	    return new TokenResponseDTO(newAccessToken, refreshToken); // 기존 refreshToken 재사용		
+	}
+
+	@Override
+	public void logout(String token) {
+		if (!jwtTokenProvider.validateToken(token)) {
+			throw new RuntimeException("유효하지 않은 Access Token입니다.");
+		}
 		
-		return null;
+		LocalDateTime expiresAt = jwtTokenProvider.getExpiration(token);
+		authDAO.insertBlacklistedToken(token, expiresAt, LocalDateTime.now());
 	}
 	 
 }

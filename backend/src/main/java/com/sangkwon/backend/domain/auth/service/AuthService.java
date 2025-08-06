@@ -8,4 +8,5 @@ public interface AuthService {
 	public TokenResponseDTO login(LoginRequestDTO request);
 	void register(UserRegisterRequestDTO dto);
 	public TokenResponseDTO reissueAccessToken(String refreshToken);
+	public void logout(String token);
 }
