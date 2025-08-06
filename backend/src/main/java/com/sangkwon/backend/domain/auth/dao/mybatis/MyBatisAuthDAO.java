@@ -30,5 +30,10 @@ public class MyBatisAuthDAO implements AuthDAO {
 	public void updateToken(RefreshToken refreshToken) {
 		refreshTokenMapper.updateToken(refreshToken);
 	}
+
+	@Override
+	public RefreshToken findByToken(String refreshToken) {
+		return refreshTokenMapper.findByToken(refreshToken);
+	}
 		
 }

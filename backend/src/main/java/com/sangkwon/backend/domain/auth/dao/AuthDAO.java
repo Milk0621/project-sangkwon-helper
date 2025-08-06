@@ -8,4 +8,6 @@ public interface AuthDAO {
     void insertToken(RefreshToken refreshToken);
 
     void updateToken(RefreshToken refreshToken);
+
+	RefreshToken findByToken(String refreshToken);
 }
