@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.auth.dto.LoginRequestDTO;
+import com.sangkwon.backend.domain.auth.dto.RefreshTokenRequestDTO;
 import com.sangkwon.backend.domain.auth.dto.TokenResponseDTO;
 import com.sangkwon.backend.domain.auth.service.AuthService;
 import com.sangkwon.backend.domain.users.dto.UserRegisterRequestDTO;
@@ -29,7 +30,7 @@ public class AuthController {
 		return ResponseEntity.ok(tokens);
 	}
 	
-	@PostMapping("/auth/register")
+	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody UserRegisterRequestDTO requestDTO) {
 		try {
 			authService.register(requestDTO);
@@ -47,6 +48,12 @@ public class AuthController {
 		} catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류 발생");
 	    }
+	}
+	
+	@PostMapping("/refresh")
+	public ResponseEntity<TokenResponseDTO> refresh(@RequestBody RefreshTokenRequestDTO request){
+		TokenResponseDTO tokens = authService.reissueAccessToken(request.getRefreshToken());
+	    return ResponseEntity.ok(tokens);
 	}
 	
 }
