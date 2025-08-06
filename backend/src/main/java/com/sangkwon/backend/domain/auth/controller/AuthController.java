@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.auth.dto.LoginRequestDTO;
@@ -54,6 +56,14 @@ public class AuthController {
 	public ResponseEntity<TokenResponseDTO> refresh(@RequestBody RefreshTokenRequestDTO request){
 		TokenResponseDTO tokens = authService.reissueAccessToken(request.getRefreshToken());
 	    return ResponseEntity.ok(tokens);
+	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+		String token = authHeader.replace("Bearer ", "");
+		
+		authService.logout(token); // 서비스로 위임
+		return ResponseEntity.ok("로그아웃 완료");
 	}
 	
 }
