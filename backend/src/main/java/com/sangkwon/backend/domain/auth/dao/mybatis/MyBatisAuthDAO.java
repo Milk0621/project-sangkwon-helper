@@ -1,5 +1,7 @@
 package com.sangkwon.backend.domain.auth.dao.mybatis;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +36,17 @@ public class MyBatisAuthDAO implements AuthDAO {
 	@Override
 	public RefreshToken findByToken(String refreshToken) {
 		return refreshTokenMapper.findByToken(refreshToken);
+	}
+
+	@Override
+	public void insertBlacklistedToken(String token, LocalDateTime expiresAt, LocalDateTime now) {
+		refreshTokenMapper.insertBlacklistedToken(token, expiresAt, now);
+	}
+
+	@Override
+	public boolean isTokenBlacklisted(String token) {
+		Integer result = refreshTokenMapper.isTokenBlacklisted(token);
+	    return result != null && result == 1;
 	}
 		
 }
