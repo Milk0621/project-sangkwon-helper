@@ -91,5 +91,23 @@ public class AuthServiceImpl implements AuthService {
 
 		usersDAO.insertUser(user);			
 	}
+
+	@Override
+	public TokenResponseDTO reissueAccessToken(String refreshToken) {
+		// 토큰 유효성 검사
+		if (!jwtTokenProvider.validateToken(refreshToken)) {
+			throw new RuntimeException("유효하지 않은 Refresh Token입니다.");
+		}
+		
+		// DB에 저장된 토큰인지 확인
+		RefreshToken saved = authDAO.findByToken(refreshToken);
+	    if (saved == null || saved.getExpiresAt().isBefore(LocalDateTime.now())) {
+	        throw new RuntimeException("만료되었거나 저장되지 않은 Refresh Token입니다.");
+	    }
+		
+		// 새 Access Token 발급
+		
+		return null;
+	}
 	 
 }
