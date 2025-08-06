@@ -18,4 +18,9 @@ public class JpaUsersDAO implements UsersDAO{
     public void insertUser(Users user) {
         usersRepository.save(user);
     }
+
+	@Override
+	public Users findByEmail(String email) {
+		return usersRepository.findByEmail(email);
+	}
 }
