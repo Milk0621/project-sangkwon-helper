@@ -1,6 +1,7 @@
 package com.sangkwon.backend.domain.auth.jwt;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -75,6 +76,18 @@ public class JwtTokenProvider {
 							.getBody();	// Payload 부분 추출
 		
 		return claims.getSubject(); // sub: 사용자 식별자 (email)
+	}
+	
+	// 토큰에서 만료 시간 추출
+	public LocalDateTime getExpiration(String token) {
+	    Claims claims = Jwts.parserBuilder()
+	                        .setSigningKey(key)
+	                        .build()
+	                        .parseClaimsJws(token)
+	                        .getBody();
+
+	    Date expiration = claims.getExpiration();
+	    return expiration.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime(); // LocalDateTime으로 변환
 	}
 
 }
