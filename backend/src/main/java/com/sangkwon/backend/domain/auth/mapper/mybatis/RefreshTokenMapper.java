@@ -13,4 +13,6 @@ public interface RefreshTokenMapper {
 	void insertToken(RefreshToken refreshToken);
 	
 	void updateToken(RefreshToken regreshToken);
+
+	RefreshToken findByToken(String refreshToken);
 }

@@ -22,4 +22,8 @@
 		where email = #{email}
 	</update>
 	
+	<select id="findByToken" resultType="com.sangkwon.backend.domain.auth.entity.RefreshToken">
+	    select * from refresh_token where token = #{token}
+	</select>
+	
 </mapper>
