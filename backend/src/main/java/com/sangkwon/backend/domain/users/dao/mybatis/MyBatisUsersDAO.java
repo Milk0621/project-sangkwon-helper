@@ -21,4 +21,9 @@ public class MyBatisUsersDAO implements UsersDAO {
     public void insertUser(Users user) {
         mapper.insertUser(user);
     }
+
+	@Override
+	public Users findByEmail(String email) {
+		return mapper.findByEmail(email);
+	}
 }

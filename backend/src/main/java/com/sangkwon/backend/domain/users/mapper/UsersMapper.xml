@@ -9,4 +9,8 @@
 		values (#{email}, #{password}, #{name}, #{number}, #{industry}, now())
 	</insert>	
 	
+	<select id="findByEmail" resultType="com.sangkwon.backend.domain.users.entity.Users">
+		select * from users where email = #{email}
+	</select>
+	
 </mapper>
