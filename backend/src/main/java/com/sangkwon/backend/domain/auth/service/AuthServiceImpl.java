@@ -37,11 +37,17 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public TokenResponseDTO login(LoginRequestDTO request) {
-		// 사용자 조회 (네 구조에서는 RefreshToken만 관리하므로 이메일만 확인)
-		// 실제 구현 시 사용자 정보는 다른 DAO를 사용 (usersDAO 등)
-
-		// 여기선 비밀번호 검증 없이 흐름만 설명
-		// → 실제 프로젝트에서는 UserDAO에서 사용자 정보 가져와서 비번 비교
+		// 사용자 조회
+		Users user = usersDAO.findByEmail(request.getEmail());
+		
+		if (user == null) {
+			throw new RuntimeException("사용자가 존재하지 않습니다.");
+		}
+		
+		// 비밀번호 일치 여부 검증
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+		}
 
 		// 토큰 생성
 		String accessToken = jwtTokenProvider.generateAccessToken(request.getEmail());
@@ -77,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
 	public void register(UserRegisterRequestDTO dto) {
 		Users user = new Users();
 		user.setEmail(dto.getEmail());
-		user.setPassword(dto.getPassword());
+		user.setPassword(passwordEncoder.encode(dto.getPassword())); // BCrypt 암호화 적용
 		user.setName(dto.getName());
 		user.setNumber(dto.getNumber());
 		user.setIndustry(dto.getIndustry());
