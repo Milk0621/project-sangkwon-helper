@@ -26,4 +26,15 @@
 	    select * from refresh_token where token = #{token}
 	</select>
 	
+	<insert id="insertBlacklistedToken">
+	    INSERT INTO token_blacklist (token, expires_at, created_at)
+	    VALUES (#{token}, #{expiresAt}, #{createdAt})
+	</insert>
+	
+	<select id="isTokenBlacklisted" resultType="int">
+	    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+	    FROM token_blacklist
+	    WHERE token = #{token}	
+    </select>
+	
 </mapper>
