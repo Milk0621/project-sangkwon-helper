@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 		if (existing == null) {
 			// 새로 저장
 			RefreshToken newToken = new RefreshToken(
-				0,
+				0L,
 				request.getEmail(),
 				refreshToken,
 				expiresAt,

@@ -3,7 +3,7 @@ package com.sangkwon.backend.domain.auth.entity;
 import java.time.LocalDateTime;
 
 public class RefreshToken {
-	private int id;
+	private Long id;
 	private String email;
 	private String token;
 	private LocalDateTime expiresAt;
@@ -11,8 +11,7 @@ public class RefreshToken {
 	
 	public RefreshToken() {}
 	
-	public RefreshToken(int id, String email, String token, LocalDateTime expiresAt, LocalDateTime createdAt) {
-		super();
+	public RefreshToken(Long id, String email, String token, LocalDateTime expiresAt, LocalDateTime createdAt) {
 		this.id = id;
 		this.email = email;
 		this.token = token;
@@ -20,10 +19,10 @@ public class RefreshToken {
 		this.createdAt = createdAt;
 	}
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getEmail() {

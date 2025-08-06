@@ -15,7 +15,7 @@ public class Users {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	
 	@Column(nullable = false, unique = true, length = 100)
 	private String email;
@@ -34,9 +34,8 @@ public class Users {
 	
 	public Users() {}
 	
-	public Users(int id, String email, String password, String name, String number, String industry,
+	public Users(Long id, String email, String password, String name, String number, String industry,
 			LocalDateTime create_at, LocalDateTime delete_at) {
-		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
@@ -47,10 +46,10 @@ public class Users {
 		this.delete_at = delete_at;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getEmail() {
