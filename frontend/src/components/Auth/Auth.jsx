@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import styles from './Auth.module.css';
 import api from '../../api/api';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Auth() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
 
     // 회원가입 상태 관리
@@ -98,13 +103,32 @@ function Auth() {
         }
     };   
 
+    // 로그인 요청
+    const handleLogin = async () => {
+        try {
+            const res = await api.post("/auth/login", {
+                email,
+                password
+            });
+
+            const { accessToken } = res.data;
+            localStorage.setItem("token", accessToken);
+
+            alert("로그인 성공!");
+            navigate("/");
+        } catch (err) {
+            console.error("로그인 실패", err);
+            alert("로그인에 실패했습니다.");
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitted(true);
 
         if (isLogin) {
             // 로그인 로직은 따로 처리
-            console.log('로그인 시도:', email, password);
+            handleLogin();
             return;
         }
 
@@ -129,7 +153,7 @@ function Auth() {
         // 모든 유효성 통과 시 처리
         const fetchRegister = async () => {
             try {
-                const res = await api.post("/users/auth/register", {
+                const res = await api.post("/auth/register", {
                     email,
                     password,
                     name,
@@ -143,6 +167,7 @@ function Auth() {
                 setEmail('');
                 setPassword('');
                 setConfirmPassword('');
+                alert("회원가입 성공");
                 setIsLogin(true);
             } catch (err) {
                 const message = err.response?.data;
