@@ -80,8 +80,8 @@ public class AuthController {
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
 		String token = authHeader.replace("Bearer ", "");
+	    authService.logout(token);
 		
-		authService.logout(token); // 서비스로 위임
 		return ResponseEntity.ok("로그아웃 완료");
 	}
 	
