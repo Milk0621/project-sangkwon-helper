@@ -2,12 +2,25 @@ import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
+import api from '../../api/api';
 
 function Header() {
     const user = useSelector((state) => state.user.user);
 
     const dispatch = useDispatch();
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
+            await api.post("/auth/logout", {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        } catch (err) {
+            console.error("서버 로그아웃 실패", err);
+        }
+
         localStorage.removeItem("token");
         dispatch(logout());
     };
@@ -32,7 +45,7 @@ function Header() {
                     {user ? (
                         <>
                             <Link to="/mypage">{user.name}님</Link>
-                            <button onClick={handleLogout}>로그아웃</button>
+                            <a onClick={handleLogout} style={{cursor:'pointer'}}>로그아웃</a>
                         </>
                         ) : (
                         <Link to="/auth">로그인</Link>
