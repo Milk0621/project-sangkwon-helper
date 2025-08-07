@@ -2,12 +2,12 @@ package com.sangkwon.backend.domain.auth.controller;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.auth.dto.LoginRequestDTO;
@@ -15,6 +15,8 @@ import com.sangkwon.backend.domain.auth.dto.RefreshTokenRequestDTO;
 import com.sangkwon.backend.domain.auth.dto.TokenResponseDTO;
 import com.sangkwon.backend.domain.auth.service.AuthService;
 import com.sangkwon.backend.domain.users.dto.UserRegisterRequestDTO;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,9 +29,26 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginRequestDTO request){
+	public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginRequestDTO request, HttpServletResponse response){
+		// 토큰 발급
 		TokenResponseDTO tokens = authService.login(request);
-		return ResponseEntity.ok(tokens);
+		String accessToken = tokens.getAccessToken();
+	    String refreshToken = tokens.getRefreshToken();
+	    
+	    // Refresh Token을 쿠키로 내려줌
+	    ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+	    		.httpOnly(true)
+	    		.secure(false) // 배포 시 true로 변경
+	    		.path("/")
+	    		.maxAge(7 * 24 * 60 * 60) // 7일
+	    		.sameSite("None") // 프론트와 도메인 다르면 반드시 필요
+	    		.build();
+	    
+	    // 쿠키를 응답 헤더에 포함
+	    response.setHeader("Set-Cookie", refreshCookie.toString());
+	    
+	    // Access Token만 응답 본문에 포함
+		return ResponseEntity.ok(new TokenResponseDTO(accessToken));
 	}
 	
 	@PostMapping("/register")
