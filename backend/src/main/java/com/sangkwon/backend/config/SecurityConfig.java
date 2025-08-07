@@ -1,5 +1,6 @@
 package com.sangkwon.backend.config;
-import com.sangkwon.backend.domain.auth.jwt.JwtTokenProvider;
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +9,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.sangkwon.backend.domain.auth.dao.AuthDAO;
 import com.sangkwon.backend.domain.auth.jwt.JwtAuthenticationFilter;
+import com.sangkwon.backend.domain.auth.jwt.JwtTokenProvider;
 
 @Configuration
 public class SecurityConfig {
@@ -23,6 +25,7 @@ public class SecurityConfig {
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http
+			.cors(withDefaults())
 		    .csrf(csrf -> csrf.disable()) // CSRF 비활성화
 		    .authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/auth/**").permitAll() // 인증 없이 허용할 엔드포인트
