@@ -113,6 +113,14 @@ function Auth() {
 
             const { accessToken } = res.data;
             localStorage.setItem("token", accessToken);
+            
+            const token = localStorage.getItem("token");
+            const userInfo = await api.get("/users/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            dispatch(setUser(userInfo.data));
 
             alert("로그인 성공!");
             navigate("/");
@@ -127,7 +135,6 @@ function Auth() {
         setIsSubmitted(true);
 
         if (isLogin) {
-            // 로그인 로직은 따로 처리
             handleLogin();
             return;
         }
