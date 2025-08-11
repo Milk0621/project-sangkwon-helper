@@ -46,6 +46,96 @@ def _read_csv_safe(path: str, need_cols: list[str]) -> pd.DataFrame:
 
     return df
 
+def insert_biz_master(batch: int = 10000):
+    # 최종으로 DB에 넣을 컬럼(테이블 스키마와 동일; timestamp 컬럼 제외)
+    final_cols = [
+        "bizesId","bizesNm","brchNm",
+        "indsLclsCd","indsLclsNm","indsMclsCd","indsMclsNm","indsSclsCd","indsSclsNm",
+        "ksicCd","ksicNm",
+        "ctprvnCd","ctprvnNm","signguCd","signguNm","adongCd","adongNm",
+        "lon","lat","rdnmAdr","lnoAdr"
+    ]
+
+    df = _read_csv_safe(BIZ_CSV, final_cols)
+
+    # 필수키 누락 행 제거
+    df = df.dropna(subset=["bizesId", "adongCd"])
+
+    # 길이 제한 보정 (DB 스키마와 일치)
+    df["bizesNm"] = df["bizesNm"].astype(object).where(df["bizesNm"].notnull(), None)
+    df["brchNm"]  = df["brchNm"].astype(object).where(df["brchNm"].notnull(), None)
+    df["rdnmAdr"] = df["rdnmAdr"].astype(object).where(df["rdnmAdr"].notnull(), None)
+    df["lnoAdr"]  = df["lnoAdr"].astype(object).where(df["lnoAdr"].notnull(), None)
+
+    df["bizesNm"] = df["bizesNm"].apply(lambda x: x[:200] if isinstance(x, str) else x)
+    df["brchNm"]  = df["brchNm"].apply(lambda x: x[:200] if isinstance(x, str) else x)
+    df["rdnmAdr"] = df["rdnmAdr"].apply(lambda x: x[:300] if isinstance(x, str) else x)
+    df["lnoAdr"]  = df["lnoAdr"].apply(lambda x: x[:300] if isinstance(x, str) else x)
+
+    # 좌표 숫자 변환 (틀리면 NaN → None)
+    for col in ["lon", "lat"]:
+        if col in df.columns:
+            num = pd.to_numeric(df[col], errors="coerce")
+            # object로 캐스팅 후 NaN → None
+            df[col] = num.astype(object)
+            df[col] = df[col].where(pd.notnull(df[col]), None)
+
+    # executemany에 들어갈 값 튜플
+    values = list(df[final_cols].itertuples(index=False, name=None))
+
+    sql = f"""
+    INSERT INTO biz_master
+    ({",".join(final_cols)})
+    VALUES ({",".join(["%s"]*len(final_cols))})
+    ON DUPLICATE KEY UPDATE
+      bizesNm=VALUES(bizesNm),
+      brchNm=VALUES(brchNm),
+      indsLclsCd=VALUES(indsLclsCd),
+      indsLclsNm=VALUES(indsLclsNm),
+      indsMclsCd=VALUES(indsMclsCd),
+      indsMclsNm=VALUES(indsMclsNm),
+      indsSclsCd=VALUES(indsSclsCd),
+      indsSclsNm=VALUES(indsSclsNm),
+      ksicCd=VALUES(ksicCd),
+      ksicNm=VALUES(ksicNm),
+      ctprvnCd=VALUES(ctprvnCd),
+      ctprvnNm=VALUES(ctprvnNm),
+      signguCd=VALUES(signguCd),
+      signguNm=VALUES(signguNm),
+      adongCd=VALUES(adongCd),
+      adongNm=VALUES(adongNm),
+      lon=VALUES(lon),
+      lat=VALUES(lat),
+      rdnmAdr=VALUES(rdnmAdr),
+      lnoAdr=VALUES(lnoAdr),
+      updated_at=CURRENT_TIMESTAMP
+    """
+
+    total = len(values)
+    if total == 0:
+        print("[biz_master] no rows to insert.")
+        return
+
+    # DB 연결 및 배치 실행
+    conn = pymysql.connect(
+        host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASSWORD,
+        database=DB_NAME, charset="utf8mb4", autocommit=False
+    )
+    try:
+        n_batches = math.ceil(total / batch)
+        with conn.cursor() as cur:
+            for i in range(n_batches):
+                chunk = values[i*batch:(i+1)*batch]
+                cur.executemany(sql, chunk)
+                print(f"[biz_master] batch {i+1}/{n_batches} inserted: {len(chunk)}")
+        conn.commit()
+        print(f"[biz_master] done: {total}")
+    except Exception as e:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
 def insert_adm_area():
     need_cols = ["ctprvnCd","ctprvnNm","signguCd","signguNm","adongCd","adongNm"]
     df = _read_csv_safe(AREA_CSV, need_cols)
@@ -73,3 +163,4 @@ def insert_adm_area():
 
 if __name__ == "__main__":
     insert_adm_area()
+    insert_biz_master()
