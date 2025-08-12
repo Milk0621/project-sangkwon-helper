@@ -29,7 +29,7 @@ public class SecurityConfig {
 		    .csrf(csrf -> csrf.disable()) // CSRF 비활성화
 		    .authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/auth/**").permitAll() // 인증 없이 허용할 엔드포인트
-		        .anyRequest().authenticated()
+				.anyRequest().authenticated()
 		    )
 		    .addFilterBefore(
 	            new JwtAuthenticationFilter(jwtTokenProvider, authDAO), // 만든 필터 등록
