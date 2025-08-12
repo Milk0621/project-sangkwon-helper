@@ -21,7 +21,7 @@ public class AdmAreaController {
 	}
 	
 	@GetMapping("/search")
-	public List<AdongSearchDTO> search(@RequestParam String query, @RequestParam(required = false) Integer limit){
+	public List<AdongSearchDTO> search(@RequestParam("query") String query, @RequestParam(name = "limit", required = false) Integer limit){
 		return admAreaService.search(query, limit);
 	}
 }
