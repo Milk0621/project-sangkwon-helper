@@ -3,7 +3,9 @@ package com.sangkwon.backend.domain.auth.jwt;
 import java.io.IOException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.sangkwon.backend.domain.auth.dao.AuthDAO;
@@ -45,10 +47,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 4. 사용자 이메일 추출
             String userEmail = jwtTokenProvider.getUserEmailFromToken(token);
-
+            
+            var authorities = java.util.List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            
             // 5. 사용자 인증 객체 생성 (권한 없음으로 설정)
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userEmail, null, null);
+                    new UsernamePasswordAuthenticationToken(userEmail, null, authorities);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             // 6. SecurityContext에 등록 (이제 인증된 사용자로 간주됨)
             SecurityContextHolder.getContext().setAuthentication(authentication);
