@@ -14,9 +14,10 @@ function Map() {
         e.preventDefault();
         setFilters({ query, category, sort });
     }, [query, category, sort]);
+    
     return(
         <>
-            <div className="wrap">
+            <div className="wrap margin">
                 <div className={styles.title}>
                     <h1>지역별 상가 현황</h1>
                     <p>행정동별 상가 분포와 상권 정보를 확인해보세요</p>
@@ -63,7 +64,32 @@ function Map() {
                         <button className={styles.searchBtn} type="submit">검색</button>
                     </form>
                 </div>
-                <KakaoMap />
+                <div className={styles.contentBox}>
+                    <div className={styles.leftContent}>
+                        <div className={styles.leftTop}>
+                            <h4>서울시 상가 현황 지도</h4>
+                        </div>
+                        <KakaoMap />
+                    </div>
+                    <div className={styles.rightContent}>
+                        <div>
+                            <div className={styles.rightTop}>
+                                <h4 style={{fontWeight: "600"}}>지역별 상가 현황</h4>
+                                <p>총 10개 지역</p>
+                            </div>
+                            <div className={styles.adong}>
+                                <div>
+                                    <p>강남구 역삼동</p>
+                                    <span>1247개</span>
+                                </div>
+                                <div>
+                                    <span>850만원</span>
+                                    <span>15,420명</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )
