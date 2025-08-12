@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import loadKakaoMap from "./kakaoMapScript";
+import styles from "./KakaoMap.module.css";
 
 function KakaoMap() {
     
@@ -17,7 +18,7 @@ function KakaoMap() {
             .catch((err) => console.error(err));
     }, [])
     return(
-        <div ref={mapRef} style={{width: "100%", height: "600px"}} />
+        <div ref={mapRef} className={styles.kakaoMap} />
     )
 }
 
