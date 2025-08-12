@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.sangkwon.backend.domain.area.mapper.AdmAreaMapper">
+  	<select id="searchAdongs" parameterType="map" resultType="com.sangkwon.backend.domain.area.dto.AdongSearchDTO">
+  		select
+  			a.adongCd as adongCd,
+  			CONCAT_WS(' ', a.ctprvnNm, a.signguNm, a.adongNm) as fullName,
+  			avgpos.center_lat as centerLat,
+  			avgpos.center_lng as centerLng
+  		from adm_area a
+  		left join (
+  			select 
+  				adongCd,
+  				avg(lat) as center_lat,
+  				avg(lon) as center_lng
+  			from biz_master
+  			group by adongCd
+  		) avgpos on avgpos.adongCd = a.adongCd
+  		where (a.adongNm like concat('%', #{query}, '%')
+  			or a.signguNm like concat('%', #{query}, '%'))
+  		order by
+  			case when a.adongNm = #{query} then 0 else 1 end,
+  			a.adongNm ASC
+  		limit #{limit}
+  	</select>
+  </mapper>
