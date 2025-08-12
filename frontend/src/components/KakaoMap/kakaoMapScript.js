@@ -7,7 +7,7 @@ const loadKakaoMapScript = () => {
             return;
         }
         
-        const script = document.createElement("script");
+        const script = document.createElement("script"); // <script> 태그를 동적으로 생성
         script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapKey}&autoload=false`;
         script.async = true;
         script.onload = () => {
