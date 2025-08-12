@@ -113,6 +113,7 @@ function Auth() {
 
             const { accessToken } = res.data;
             localStorage.setItem("token", accessToken);
+            api.defaults.headers.Authorization = `Bearer ${accessToken}`;
             
             const token = localStorage.getItem("token");
             const userInfo = await api.get("/users/me", {
