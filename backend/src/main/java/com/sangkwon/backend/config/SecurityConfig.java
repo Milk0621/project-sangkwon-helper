@@ -30,9 +30,9 @@ public class SecurityConfig {
 		    .csrf(csrf -> csrf.disable()) // CSRF 비활성화
 		    .authorizeHttpRequests(auth -> auth
 	    		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-				.requestMatchers("/api/auth/**").permitAll() // 인증 없이 허용할 엔드포인트
+				.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/api/users/me").authenticated()
-				.requestMatchers(HttpMethod.GET, "/api/adongs/search").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/areas/sidos", "/api/areas/sidos/{sido}/sigungus").authenticated()
 				.anyRequest().authenticated()
 		    )
 		    .addFilterBefore(
