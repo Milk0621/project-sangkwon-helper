@@ -83,7 +83,7 @@
 }
 
 .leftContent {
-  width: 800px;
+  width: 850px;
   border: 1px solid var(--border-color);
   border-radius: .5rem;
 }
@@ -102,6 +102,7 @@
   height: 470px;
   border: 1px solid var(--border-color);
   border-radius: .5rem;
+  overflow-y: auto;
 }
 
 .rightTop {
