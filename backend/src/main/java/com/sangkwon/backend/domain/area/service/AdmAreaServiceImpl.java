@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.sangkwon.backend.domain.area.dao.AdmAreaDAO;
-import com.sangkwon.backend.domain.area.dto.AdongSearchDTO;
+import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 
 @Service
 public class AdmAreaServiceImpl implements AdmAreaService {
@@ -15,10 +15,20 @@ public class AdmAreaServiceImpl implements AdmAreaService {
 	public AdmAreaServiceImpl(AdmAreaDAO admAreaDAO) {
 		this.admAreaDAO = admAreaDAO;
 	}
-	
+
 	@Override
-	public List<AdongSearchDTO> search(String query, Integer limit) {
-		int lim = (limit == null) ? 10: limit;
-		return admAreaDAO.search(query, lim);
+	public List<AreaCountDTO> listSidoStats() {
+		return admAreaDAO.listSidoStats();
 	}
+
+	@Override
+	public List<AreaCountDTO> listSigunguStats(String sido) {
+		return admAreaDAO.listSigunguStats(sido);
+	}
+
+	@Override
+	public int getSidoTotal(String sido) {
+		return admAreaDAO.getSidoTotal(sido);
+	}
+	
 }
