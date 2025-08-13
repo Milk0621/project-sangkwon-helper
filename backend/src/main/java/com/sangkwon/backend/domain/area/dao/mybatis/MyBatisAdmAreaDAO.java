@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.sangkwon.backend.domain.area.dao.AdmAreaDAO;
-import com.sangkwon.backend.domain.area.dto.AdongSearchDTO;
+import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper;
 
 @Repository
@@ -20,10 +20,20 @@ public class MyBatisAdmAreaDAO implements AdmAreaDAO {
 
 
 	@Override
-	public List<AdongSearchDTO> search(String query, int limit) {
-		String q = (query == null) ? "" : query.trim();
-		int lim = (limit <= 0 || limit > 20) ? 10 : limit;
-		return mapper.searchAdongs(q, lim);
+	public List<AreaCountDTO> listSidoStats() {
+		return mapper.listSidoStats();
 	}
-	
+
+
+	@Override
+	public List<AreaCountDTO> listSigunguStats(String sido) {
+		return mapper.listSigunguStats(sido);
+	}
+
+
+	@Override
+	public int getSidoTotal(String sido) {
+		return mapper.getSidoTotal(sido);
+	}
+
 }
