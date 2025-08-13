@@ -37,7 +37,7 @@ function KakaoMap({ filters, selectedAdong }) {
 
         const { kakao } = window;
         const pos = new kakao.maps.LatLng(centerLat, centerLng);
-        mapRef.current.setLevel(4);
+        mapRef.current.setLevel(5);
         mapRef.current.panTo(pos);
         console.log("좌표", pos.toString());
     }, [selectedAdong]);
