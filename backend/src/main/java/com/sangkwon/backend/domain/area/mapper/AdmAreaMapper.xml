@@ -2,26 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper">
-  	<select id="searchAdongs" parameterType="map" resultType="com.sangkwon.backend.domain.area.dto.AdongSearchDTO">
-  		select
-  			a.adongCd as adongCd,
-  			CONCAT_WS(' ', a.ctprvnNm, a.signguNm, a.adongNm) as fullName,
-  			avgpos.center_lat as centerLat,
-  			avgpos.center_lng as centerLng
-  		from adm_area a
-  		left join (
-  			select 
-  				adongCd,
-  				avg(lat) as center_lat,
-  				avg(lon) as center_lng
-  			from biz_master
-  			group by adongCd
-  		) avgpos on avgpos.adongCd = a.adongCd
-  		where (a.adongNm like concat('%', #{query}, '%')
-  			or a.signguNm like concat('%', #{query}, '%'))
-  		order by
-  			case when a.adongNm = #{query} then 0 else 1 end,
-  			a.adongNm ASC
-  		limit #{limit}
+  	
+  	<!-- 시/도 별 상가 수 -->
+  	<select id="listSidoSatus" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+  		SELECT 
+  			a.ctprvnNm AS name,
+  			SUM(s.store_count) AS `count`
+  		FROM adm_area a
+  		JOIN adong_status s ON s.adongCd = a.adongCd
+  		GROUP BY a.ctprvnNm
+  		HAVING name IS NOT NULL AND name != ''
+  		ORDER BY count DESC, name ASC
   	</select>
+  	
+  	<!-- 특정 시/도의 구/군 별 상가 수 -->
+  	<select id="listSigunguStatus" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+  		SELECT 
+  			a.signguNm As name,
+  			SUM(s.store_count) AS `count`
+  		FROM adm_area a
+  		JOIN adong_stats s ON s.adongCd = a.adongCd
+  		WHERE a.ctprvnNm = #{sido}
+  		GROUP BY a.signguNm
+  		HAVING name IS NOT NULL AND name != ''
+  		ORDER BY count DESC, name ASC
+  	</select>
+  	
+  	<!-- 특정 시/도의 전체 합계 -->
+	<select id="getSidoTotal" resultType="int">
+		SELECT
+			SUM(s.store_count) as `count`
+		FROM adm_area a
+		JOIN adong_satats s ON s.adongCd = a.adongCd
+		WHERE a.ctprvnNm = #{sido}
+	</select>  	
   </mapper>
