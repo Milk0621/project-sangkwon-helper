@@ -4,19 +4,19 @@
   <mapper namespace="com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper">
   	
   	<!-- 시/도 별 상가 수 -->
-  	<select id="listSidoSatus" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+  	<select id="listSidoStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
   		SELECT 
   			a.ctprvnNm AS name,
   			SUM(s.store_count) AS `count`
   		FROM adm_area a
-  		JOIN adong_status s ON s.adongCd = a.adongCd
+  		JOIN adong_stats s ON s.adongCd = a.adongCd
   		GROUP BY a.ctprvnNm
   		HAVING name IS NOT NULL AND name != ''
   		ORDER BY count DESC, name ASC
   	</select>
   	
   	<!-- 특정 시/도의 구/군 별 상가 수 -->
-  	<select id="listSigunguStatus" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+  	<select id="listSigunguStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
   		SELECT 
   			a.signguNm As name,
   			SUM(s.store_count) AS `count`
@@ -33,7 +33,7 @@
 		SELECT
 			SUM(s.store_count) as `count`
 		FROM adm_area a
-		JOIN adong_satats s ON s.adongCd = a.adongCd
+		JOIN adong_stats s ON s.adongCd = a.adongCd
 		WHERE a.ctprvnNm = #{sido}
 	</select>  	
   </mapper>
