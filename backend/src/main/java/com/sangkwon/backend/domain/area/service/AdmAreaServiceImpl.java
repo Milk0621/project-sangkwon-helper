@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.sangkwon.backend.domain.area.dao.AdmAreaDAO;
+import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
+import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 
 @Service
 public class AdmAreaServiceImpl implements AdmAreaService {
@@ -29,6 +31,16 @@ public class AdmAreaServiceImpl implements AdmAreaService {
 	@Override
 	public List<AreaCountDTO> listDongStats(String sido, String sigungu) {
 		return admAreaDAO.listDongStats(sido, sigungu);
+	}
+
+	@Override
+	public SigunguCenterDTO getSigunguCenter(String sido, String sigungu) {
+		return admAreaDAO.getSigunguCenter(sido, sigungu);
+	}
+
+	@Override
+	public AdongCenterDTO getDongCenter(String sido, String sigungu, String dong) {
+		return admAreaDAO.getDongCenter(sido, sigungu, dong);
 	}
 	
 }

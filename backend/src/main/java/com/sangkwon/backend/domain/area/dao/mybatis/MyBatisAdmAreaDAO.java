@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.sangkwon.backend.domain.area.dao.AdmAreaDAO;
+import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
+import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 import com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper;
 
 @Repository
@@ -34,6 +36,18 @@ public class MyBatisAdmAreaDAO implements AdmAreaDAO {
 	@Override
 	public List<AreaCountDTO> listDongStats(String sido, String sigungu) {
 		return mapper.listDongStats(sido, sigungu);
+	}
+
+
+	@Override
+	public SigunguCenterDTO getSigunguCenter(String sido, String sigungu) {
+		return mapper.getSigunguCenter(sido, sigungu);
+	}
+
+
+	@Override
+	public AdongCenterDTO getDongCenter(String sido, String sigungu, String dong) {
+		return mapper.getDongCenter(sido, sigungu, dong);
 	}
 
 }
