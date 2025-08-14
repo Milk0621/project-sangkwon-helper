@@ -40,5 +40,32 @@
  		HAVING name IS NOT NULL AND name != ''
  		ORDER BY `count` DESC, name ASC
  	</select>
+ 
+	<!-- 구 중심좌표 -->
+ 	<select id="getSigunguCenter" resultType="com.sangkwon.backend.domain.area.dto.SigunguCenterDTO">
+ 		SELECT
+ 			ctprvnNm AS sido,
+ 			signguNm AS sigungu,
+ 			center_lat AS centerLat,
+ 			center_lng AS centerLng
+ 		FROM area_center_gu
+ 		WHERE ctprvnNm = #{sido} 
+	 		AND signguNm = #{sigungu}
+ 	</select>
+ 	
+ 	<!-- 동 중심좌표 -->
+ 	<select id="getDongCenter" resultType="com.sangkwon.backend.domain.area.dto.AdongCenterDTO">
+ 		SELECT
+ 			adongCd AS adongCd,
+ 			ctprvnNm AS sido,
+ 			signguNm AS sigungu,
+ 			adongNm AS dong,
+ 			center_lat AS centerLat,
+ 			center_lng AS centerLng
+ 		FROM area_center_dong
+ 		WHERE ctprvnNm = #{sido} 
+	 		AND signguNm = #{sigungu}
+	 		AND adongNm = #{dong}
+ 	</select>
  	
   </mapper>
