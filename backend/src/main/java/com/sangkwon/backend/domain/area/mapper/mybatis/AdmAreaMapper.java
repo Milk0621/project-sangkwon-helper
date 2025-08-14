@@ -11,5 +11,4 @@ import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 public interface AdmAreaMapper {
 	List<AreaCountDTO> listSidoStats();
     List<AreaCountDTO> listSigunguStats(@Param("sido") String sido);
-    int getSidoTotal(@Param("sido") String sido);
 }

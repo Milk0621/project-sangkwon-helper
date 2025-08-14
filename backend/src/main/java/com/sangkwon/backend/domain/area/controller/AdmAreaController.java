@@ -29,9 +29,7 @@ public class AdmAreaController {
 
     // 특정 시/도 선택 시, 구/군 목록 + 수, 그리고 총합
     @GetMapping("/sidos/{sido}/sigungus")
-    public Map<String,Object> listSigungu(@PathVariable("sido") String sido){
-        var items = admAreaService.listSigunguStats(sido);
-        var total = admAreaService.getSidoTotal(sido);
-        return Map.of("sido", sido, "total", total, "items", items);
+    public List<AreaCountDTO> listSigungu(@PathVariable("sido") String sido){
+        return admAreaService.listSigunguStats(sido);
     }
 }

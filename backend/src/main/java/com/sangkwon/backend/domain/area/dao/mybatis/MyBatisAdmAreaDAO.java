@@ -30,10 +30,4 @@ public class MyBatisAdmAreaDAO implements AdmAreaDAO {
 		return mapper.listSigunguStats(sido);
 	}
 
-
-	@Override
-	public int getSidoTotal(String sido) {
-		return mapper.getSidoTotal(sido);
-	}
-
 }

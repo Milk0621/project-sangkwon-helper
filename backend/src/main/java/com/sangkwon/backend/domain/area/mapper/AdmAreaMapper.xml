@@ -27,13 +27,6 @@
   		HAVING name IS NOT NULL AND name != ''
   		ORDER BY count DESC, name ASC
   	</select>
-  	
-  	<!-- 특정 시/도의 전체 합계 -->
-	<select id="getSidoTotal" resultType="int">
-		SELECT
-			SUM(s.store_count) as `count`
-		FROM adm_area a
-		JOIN adong_stats s ON s.adongCd = a.adongCd
-		WHERE a.ctprvnNm = #{sido}
-	</select>  	
+ 
+ 	
   </mapper>
