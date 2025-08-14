@@ -8,6 +8,9 @@ function Map() {
     const [sidos, setSidos] = useState([]);
     const [sigungu, setSigungu] = useState("");
     const [sigunguList, setSigunguList] = useState([]);
+    const [dong, setDong] = useState("");
+    const [dongList, setDongList] = useState([]);
+    const [region, setRegion]= useState("");
 
     const [category, setCategory] = useState("ALL");
     const [sort, setSort] = useState("BIZ_DESC"); // 상가수 많은순 기본
@@ -36,7 +39,7 @@ function Map() {
         if (!sidoName) return;
         try {
             const encoded = encodeURIComponent(sidoName);
-            const res = await api.get(`/areas/sidos/${encoded}/sigungus`);
+            const res = await api.get(`/areas/${encoded}/sigungus`);
             console.log(res.data);
             const items = Array.isArray(res.data) ? res.data : res.data?.items;
             setSigunguList(Array.isArray(items) ? items : []);
@@ -86,6 +89,26 @@ function Map() {
         setIsSigunguOpen(false);
     }
 
+    // 검색 시 동 목록 불러오기
+    const fetchSearch = async () => {
+        try {
+            const res = await api.get(`/areas/${sido}/${sigungu}/dong`);
+            console.log(res.data);
+            const items = Array.isArray(res.data) ? res.data : res.data?.items;
+            setDongList(items);
+            setRegion(`${sido} ${sigungu}`);
+        } catch (err) {
+            console.error("동 불러오기 실패", err);
+            setDongList([]);
+        }
+    }
+
+    // 동 선택
+    const handleSelectDong = (name) => {
+        setDong(name);
+        // 좌표 불러와서 지도 표시
+    }
+
     // 외부 클릭시 닫기
     useEffect(() => {
         const onClickOutside = (e) => {
@@ -111,7 +134,7 @@ function Map() {
                 </div>
 
                 <div className={styles.searchBox}>
-                    <form className={styles.search} >
+                    <div className={styles.search} >
                         <div className={styles.inputWrap} ref={sidoWrapRef}>
                             <button 
                                 type="button"
@@ -185,13 +208,13 @@ function Map() {
                             <option value="NAME_ASC">이름 오름차순</option>
                         </select>
 
-                        <button className={styles.searchBtn} type="submit" onClick={() => console.log("[BTN] submit clicked")}>검색</button>
-                    </form>
+                        <button className={styles.searchBtn} onClick={() => fetchSearch()}>검색</button>
+                    </div>
                 </div>
                 <div className={styles.contentBox}>
                     <div className={styles.leftContent}>
                         <div className={styles.leftTop}>
-                            <h4>{sido} 상가 현황 지도</h4>
+                            <h4> {region} 상가 현황 지도</h4>
                         </div>
                         <KakaoMap />
                     </div>
@@ -199,18 +222,20 @@ function Map() {
                         <div>
                             <div className={styles.rightTop}>
                                 <h4 style={{fontWeight: "600"}}>지역별 상가 현황</h4>
-                                <p>총 10개 지역</p>
+                                <p>각 행정동별 상가 현황을 확인하세요.</p>
                             </div>
-                            <div className={styles.adong}>
-                                <div>
-                                    <p>강남구 역삼동</p>
-                                    <span>1247개</span>
+                            {dongList.map((item, idx) => (
+                                <div className={styles.adong}>
+                                    <div>
+                                        <p>{sigungu} {item.name}</p>
+                                        <span>{item.count}개</span>
+                                    </div>
+                                    <div>
+                                        <span>850만원</span>
+                                        <span>15,420명</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span>850만원</span>
-                                    <span>15,420명</span>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
