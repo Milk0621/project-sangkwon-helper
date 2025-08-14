@@ -25,5 +25,10 @@ public class AdmAreaServiceImpl implements AdmAreaService {
 	public List<AreaCountDTO> listSigunguStats(String sido) {
 		return admAreaDAO.listSigunguStats(sido);
 	}
+
+	@Override
+	public List<AreaCountDTO> listDongStats(String sido, String sigungu) {
+		return admAreaDAO.listDongStats(sido, sigungu);
+	}
 	
 }

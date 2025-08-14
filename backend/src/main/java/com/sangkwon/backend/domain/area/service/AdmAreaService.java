@@ -7,4 +7,5 @@ import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 public interface AdmAreaService {
 	List<AreaCountDTO> listSidoStats();
     List<AreaCountDTO> listSigunguStats(String sido);
+	List<AreaCountDTO> listDongStats(String sido, String sigungu);
 }
