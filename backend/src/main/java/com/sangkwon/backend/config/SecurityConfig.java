@@ -32,7 +32,7 @@ public class SecurityConfig {
 	    		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/api/users/me").authenticated()
-				.requestMatchers(HttpMethod.GET, "/api/areas/sidos", "/api/areas/sidos/{sido}/sigungus").authenticated()
+				.requestMatchers(HttpMethod.GET, "/api/areas/**").authenticated()
 				.anyRequest().authenticated()
 		    )
 		    .addFilterBefore(
