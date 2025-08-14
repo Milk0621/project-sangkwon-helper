@@ -12,21 +12,33 @@
   		JOIN adong_stats s ON s.adongCd = a.adongCd
   		GROUP BY a.ctprvnNm
   		HAVING name IS NOT NULL AND name != ''
-  		ORDER BY count DESC, name ASC
+  		ORDER BY `count` DESC, name ASC
   	</select>
   	
   	<!-- 특정 시/도의 구/군 별 상가 수 -->
   	<select id="listSigunguStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
   		SELECT 
-  			a.signguNm As name,
+  			a.signguNm AS name,
   			SUM(s.store_count) AS `count`
   		FROM adm_area a
   		JOIN adong_stats s ON s.adongCd = a.adongCd
   		WHERE a.ctprvnNm = #{sido}
   		GROUP BY a.signguNm
   		HAVING name IS NOT NULL AND name != ''
-  		ORDER BY count DESC, name ASC
+  		ORDER BY `count` DESC, name ASC
   	</select>
- 
+  	
+ 	<!-- 특정 시/도의 구/군의 동 별 상가 수 -->
+ 	<select id="listDongStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+ 		SELECT
+ 			a.adongNm AS name,
+ 			SUM(s.store_count) AS `count`
+ 		FROM adm_area a
+ 		JOIN adong_stats s ON s.adongCd = a.adongCd
+ 		WHERE a.ctprvnNm = #{sido} and a.signguNm = #{sigungu}
+ 		GROUP BY a.adongNm
+ 		HAVING name IS NOT NULL AND name != ''
+ 		ORDER BY `count` DESC, name ASC
+ 	</select>
  	
   </mapper>
