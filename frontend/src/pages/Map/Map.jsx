@@ -6,8 +6,10 @@ import api from "../../api/api";
 function Map() {
     const [sido, setSido] = useState("");
     const [sidos, setSidos] = useState([]);
+    const [appliedSido, setAppliedSido] = useState("");
     const [sigungu, setSigungu] = useState("");
     const [sigunguList, setSigunguList] = useState([]);
+    const [appliedSigungu, setAppliedSigungu] = useState("");
     const [dong, setDong] = useState("");
     const [dongList, setDongList] = useState([]);
     const [region, setRegion]= useState("");
@@ -89,13 +91,15 @@ function Map() {
         setIsSigunguOpen(false);
     }
 
-    // 검색 시 동 목록 불러오기
+    // 동 목록 불러오기
     const fetchSearch = async () => {
         try {
             const res = await api.get(`/areas/${sido}/${sigungu}/dong`);
             console.log(res.data);
             const items = Array.isArray(res.data) ? res.data : res.data?.items;
             setDongList(items);
+            setAppliedSido(sido);
+            setAppliedSigungu(sigungu);
             setRegion(`${sido} ${sigungu}`);
         } catch (err) {
             console.error("동 불러오기 실패", err);
@@ -106,6 +110,7 @@ function Map() {
     // 동 선택
     const handleSelectDong = (name) => {
         setDong(name);
+        setRegion(`${sido} ${sigungu} ${dong}`);
         // 좌표 불러와서 지도 표시
     }
 
@@ -124,6 +129,10 @@ function Map() {
         }
         return () => document.removeEventListener("mousedown", onClickOutside);
     }, [isSidoOpen, isSigunguOpen]);
+
+    // useEffect(() => {
+    //     fetchSearch("서울특별시", "강남구");
+    // }, []);
     
     return(
         <>
@@ -225,9 +234,9 @@ function Map() {
                                 <p>각 행정동별 상가 현황을 확인하세요.</p>
                             </div>
                             {dongList.map((item, idx) => (
-                                <div className={styles.adong}>
+                                <div className={styles.adong} onClick={()=>{handleSelectDong()}}>
                                     <div>
-                                        <p>{sigungu} {item.name}</p>
+                                        <p>{appliedSigungu} {item.name}</p>
                                         <span>{item.count}개</span>
                                     </div>
                                     <div>
