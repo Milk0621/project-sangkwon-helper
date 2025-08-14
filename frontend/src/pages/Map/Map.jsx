@@ -83,7 +83,7 @@ function Map() {
     // 시군구 선택
     const handleSelectSigungu = (name) => {
         setSigungu(name);
-        setIsSidoOpen(false);
+        setIsSigunguOpen(false);
     }
 
     // 외부 클릭시 닫기
