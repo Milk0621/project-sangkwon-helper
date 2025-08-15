@@ -1,10 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import loadKakaoMap from "./kakaoMapScript";
 import styles from "./KakaoMap.module.css";
 
-function KakaoMap({ filters, selectedAdong }) {
+function KakaoMap({ selectedAdong, markers = [], onMarkerClick }) {
+    console.log(markers);
     const containerRef = useRef(null);
     const mapRef = useRef(null);
+    const [ready, setReady] = useState(false);
+
+    const overlaysRef = useRef([]); // 현재 표시 중인 마커들
     
     // 마운트 시 한 번만 지도 초기화
     useEffect(() => {
@@ -20,6 +24,7 @@ function KakaoMap({ filters, selectedAdong }) {
                     center: new kakao.maps.LatLng(37.50614187, 127.04414706),
                     level: 5,
                 });
+                setReady(true);
                 console.log("기본 지도 불러옴");
             } catch (err) {
                 console.error("기본 지도 불러오기 실패", err);
@@ -31,16 +36,37 @@ function KakaoMap({ filters, selectedAdong }) {
 
     // 선택된 행정동으로 이동
     useEffect(() => {
-        if (!mapRef.current || !selectedAdong) return;
-        const { centerLat, centerLng } = selectedAdong || {};
-        if (!centerLat || !centerLng) return;
-
+        if (!ready || !mapRef.current || !window.kakao || !window.kakao.maps || !selectedAdong) return;
+        
         const { kakao } = window;
+        const { centerLat, centerLng } = selectedAdong;
         const pos = new kakao.maps.LatLng(centerLat, centerLng);
         mapRef.current.setLevel(5);
         mapRef.current.panTo(pos);
         console.log("좌표", pos.toString());
-    }, [selectedAdong]);
+    }, [ready, selectedAdong]);
+
+    useEffect(() => {
+        if (!ready || !mapRef.current || !window.kakao || !window.kakao.maps) return;
+        const { kakao } = window;
+
+        // 이전 마커 제거
+        overlaysRef.current.forEach(x => x.setMap(null));
+        overlaysRef.current = [];
+
+        if (!markers.length) return;
+
+        markers.forEach(m => {
+            const lat = m.lat;
+            const lng = m.lng;
+            if (lat == null || lng == null) return;
+
+            const position = new kakao.maps.LatLng(lat, lng);
+            const marker = new kakao.maps.Marker({ position });
+            marker.setMap(mapRef.current);
+            overlaysRef.current.push(marker);
+        });
+    }, [ready, markers]); 
 
         return (<div ref={containerRef} className={styles.kakaoMap} />);
     }
