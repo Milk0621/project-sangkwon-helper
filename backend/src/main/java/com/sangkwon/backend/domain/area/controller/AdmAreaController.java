@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
+import com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 import com.sangkwon.backend.domain.area.service.AdmAreaService;
@@ -46,7 +47,7 @@ public class AdmAreaController {
     
     // 특정 시/도와 구/군 선택 후 검색 시, 동 목록 + 수
     @GetMapping("/{sido}/{sigungu}/dong")
-    public List<AreaCountDTO> listDong(@PathVariable("sido") String sido, @PathVariable("sigungu") String sigungu){
+    public List<AdongWithCenterDTO> listDong(@PathVariable("sido") String sido, @PathVariable("sigungu") String sigungu){
     	return admAreaService.listDongStats(sido, sigungu);
     }
     

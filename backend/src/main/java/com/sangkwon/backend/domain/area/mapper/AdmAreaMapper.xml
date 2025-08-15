@@ -29,15 +29,17 @@
   	</select>
   	
  	<!-- 특정 시/도의 구/군의 동 별 상가 수 -->
- 	<select id="listDongStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+ 	<select id="listDongStats" resultType="com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO">
  		SELECT
  			a.adongNm AS name,
- 			SUM(s.store_count) AS `count`
+ 			SUM(s.store_count) AS `count`,
+ 			c.center_lat AS centerLat,
+ 			c.center_lng AS centerLng
  		FROM adm_area a
- 		JOIN adong_stats s ON s.adongCd = a.adongCd
+ 		LEFT JOIN adong_stats s ON s.adongCd = a.adongCd
+ 		LEFT JOIN area_center_dong c ON c.adongCd = a.adongCd
  		WHERE a.ctprvnNm = #{sido} and a.signguNm = #{sigungu}
- 		GROUP BY a.adongNm
- 		HAVING name IS NOT NULL AND name != ''
+ 		GROUP BY a.adongNm, c.center_lat, c.center_lng
  		ORDER BY `count` DESC, name ASC
  	</select>
  
