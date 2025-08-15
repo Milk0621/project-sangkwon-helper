@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KakaoMap from "../../components/KakaoMap/KakaoMap";
 import styles from "./Map.module.css";
 import api from "../../api/api";
@@ -11,6 +11,36 @@ function Map() {
     const [dongList, setDongList] = useState([]);
     const [region, setRegion]= useState("");
 
+    const [selectedAdong, setSelectedAdong] = useState(null);
+
+    // 시군구 중심 좌표 불러오기
+    const fetchSigunguCenter = async (sidoName, sigunguName) => {
+        try {
+            const res = await api.get(`/areas/${sidoName}/${sigunguName}/center`);
+            const { centerLat, centerLng } = res.data;
+            setSelectedAdong({
+                centerLat: Number(centerLat),
+                centerLng: Number(centerLng)
+            });
+        } catch (err) {
+            console.error("시군구 중심 좌표 불러오기 실패", err);
+        }
+    }
+
+    // 동 중심 좌표 불러오기
+    const fetchDongCenter = async (sidoName, sigunguName, dongName) => {
+        try {
+            const res = await api.get(`/areas/${sidoName}/${sigunguName}/${dongName}/center`);
+            const { centerLat, centerLng } = res.data;
+            setSelectedAdong({
+                centerLat: Number(centerLat),
+                centerLng: Number(centerLng)
+            });
+        } catch (err) {
+            console.error("동 중심 좌표 불러오기 실패", err);
+        }
+    }
+
     // 동 목록 불러오기
     const handleSearch = async (sidoName, sigunguName) => {
         try {
@@ -20,6 +50,7 @@ function Map() {
             setAppliedSido(sidoName);
             setAppliedSigungu(sigunguName);
             setRegion(`${sidoName} ${sigunguName}`);
+            fetchSigunguCenter(sidoName, sigunguName);
         } catch (err) {
             console.error("동 불러오기 실패", err);
             setDongList([]);
@@ -30,8 +61,12 @@ function Map() {
     const handleSelectDong = (name) => {
         setDong(name);
         setRegion(`${appliedSido} ${appliedSigungu} ${name}`);
-        // 좌표 불러와서 지도 표시
+        fetchDongCenter(appliedSido, appliedSigungu, name);
     }
+
+    useEffect(() => {
+        handleSearch("서울특별시", "강남구");
+    }, [])
 
     return(
         <>
@@ -49,7 +84,7 @@ function Map() {
                         <div className={styles.leftTop}>
                             <h4> {region} 상가 현황 지도</h4>
                         </div>
-                        <KakaoMap />
+                        <KakaoMap selectedAdong={selectedAdong}/>
                     </div>
                     <div className={styles.rightContent}>
                         <div>

@@ -17,7 +17,7 @@ function KakaoMap({ filters, selectedAdong }) {
 
                 const { kakao } = window;
                 mapRef.current = new kakao.maps.Map(containerRef.current, {
-                    center: new kakao.maps.LatLng(37.5665, 126.9780),
+                    center: new kakao.maps.LatLng(37.50614187, 127.04414706),
                     level: 5,
                 });
                 console.log("기본 지도 불러옴");
