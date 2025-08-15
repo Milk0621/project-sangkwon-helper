@@ -12,6 +12,7 @@ function Map() {
     const [region, setRegion]= useState("");
 
     const [selectedAdong, setSelectedAdong] = useState(null);
+    const [markers, setMarkers] = useState([]);
 
     // 시군구 중심 좌표 불러오기
     const fetchSigunguCenter = async (sidoName, sigunguName) => {
@@ -19,8 +20,8 @@ function Map() {
             const res = await api.get(`/areas/${sidoName}/${sigunguName}/center`);
             const { centerLat, centerLng } = res.data;
             setSelectedAdong({
-                centerLat: Number(centerLat),
-                centerLng: Number(centerLng)
+                centerLat: centerLat,
+                centerLng: centerLng
             });
         } catch (err) {
             console.error("시군구 중심 좌표 불러오기 실패", err);
@@ -33,8 +34,8 @@ function Map() {
             const res = await api.get(`/areas/${sidoName}/${sigunguName}/${dongName}/center`);
             const { centerLat, centerLng } = res.data;
             setSelectedAdong({
-                centerLat: Number(centerLat),
-                centerLng: Number(centerLng)
+                centerLat: centerLat,
+                centerLng: centerLng
             });
         } catch (err) {
             console.error("동 중심 좌표 불러오기 실패", err);
@@ -46,10 +47,21 @@ function Map() {
         try {
             const res = await api.get(`/areas/${sidoName}/${sigunguName}/dong`);
             const items = Array.isArray(res.data) ? res.data : res.data?.items;
-            setDongList(items);
             setAppliedSido(sidoName);
             setAppliedSigungu(sigunguName);
             setRegion(`${sidoName} ${sigunguName}`);
+
+            const markers = items
+                .map(({ name, count, centerLat, centerLng }) => ({
+                    name,
+                    count: count || 0,
+                    lat: centerLat,
+                    lng: centerLng,
+                }))
+
+            setDongList(items);
+            setMarkers(markers);
+
             fetchSigunguCenter(sidoName, sigunguName);
         } catch (err) {
             console.error("동 불러오기 실패", err);
@@ -68,6 +80,12 @@ function Map() {
         handleSearch("서울특별시", "강남구");
     }, [])
 
+    const handleMarkerClick = (marker) => {
+        setDong(marker.name);
+        setRegion(`${appliedSido} ${appliedSigungu} ${marker.name}`);
+        setSelectedAdong({ centerLat: marker.lat, centerLng: marker.lng });
+    }
+
     return(
         <>
             <div className="wrap margin">
@@ -84,7 +102,11 @@ function Map() {
                         <div className={styles.leftTop}>
                             <h4> {region} 상가 현황 지도</h4>
                         </div>
-                        <KakaoMap selectedAdong={selectedAdong}/>
+                        <KakaoMap 
+                            selectedAdong={selectedAdong}
+                            markers={markers}
+                            onMarkerClick={handleMarkerClick}
+                        />
                     </div>
                     <div className={styles.rightContent}>
                         <div>
