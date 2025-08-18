@@ -62,11 +62,31 @@ function KakaoMap({ selectedAdong, markers = [], onMarkerClick }) {
             if (lat == null || lng == null) return;
 
             const position = new kakao.maps.LatLng(lat, lng);
-            const marker = new kakao.maps.Marker({ position });
-            marker.setMap(mapRef.current);
-            overlaysRef.current.push(marker);
+
+            const el = document.createElement("div");
+            el.className = styles.marker;
+            el.innerHTML = `
+                <div class="${styles.count}">${(m.count ?? 0).toLocaleString()}</div>
+                <div class="${styles.name}">${(m.name ?? "")}</div>
+            `
+            el.style.cursor = "pointer";
+            el.onclick = () => {
+                mapRef.current.setLevel(5);
+                mapRef.current.panTo(position);
+                onMarkerClick && onMarkerClick(m);
+            }
+
+            const ov = new kakao.maps.CustomOverlay({
+                position: position,
+                content: el,
+                xAnchor: 0.5,
+                yAnchor: 1,       // 하단이 좌표 지점
+                clickable: true,
+            });
+            ov.setMap(mapRef.current);
+            overlaysRef.current.push(ov);
         });
-    }, [ready, markers]); 
+    }, [ready, markers, onMarkerClick]); 
 
         return (<div ref={containerRef} className={styles.kakaoMap} />);
     }
