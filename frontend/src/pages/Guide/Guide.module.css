@@ -1,0 +1,19 @@
+.guideBanner {
+    width: 100%;
+    height: 350px;
+    background-color: var(--main-blue);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.guideBanner h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.guideBanner p {
+    font-size: 1.4rem;
+}
