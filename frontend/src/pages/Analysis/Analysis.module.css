@@ -80,13 +80,16 @@
     gap: .5rem .8rem;
 }
 
-button {
+.analysisForm button {
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
-    width: 100%;
     padding: .5rem;
 }
 
-button:hover{
+.analysisForm button:hover{
     background-color: var(--button-hover);
+}
+
+.analysisForm .nextBtn {
+    width: 100%;
 }
