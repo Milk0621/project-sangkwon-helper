@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sangkwon.backend.domain.category.mapper.mybatis.CategoryMapper">
+	<!-- 대분류 카테고리 목록 -->
+ 	<select id="largeUpjongList" resultType="com.sangkwon.backend.domain.category.dto.CategoryDTO">
+ 		SELECT
+ 			indsLclsCd AS code,
+ 			indsLclsNm AS name
+ 		FROM raw_category
+ 		GROUP BY indsLclsCd, indsLclsNm
+ 	</select>
+ 	
+ 	<!-- 중분류 카테고리 목록 -->
+ 	<select id="middleUpjongList" resultType="com.sangkwon.backend.domain.category.dto.CategoryDTO">
+ 		SELECT
+ 			indsMclsCd AS code,
+ 			indsMclsNm AS name
+ 		FROM raw_category
+ 		WHERE indsLclsCd = #{largeCd}
+ 		GROUP BY indsMclsCd, indsMclsNm
+ 	</select>
+</mapper>
