@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper">
   	
-  	<!-- 시/도 별 상가 수 -->
+  	<!-- 시/도 목록 및 상가 수 -->
   	<select id="listSidoStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
   		SELECT 
   			a.ctprvnNm AS name,
@@ -15,7 +15,7 @@
   		ORDER BY `count` DESC, name ASC
   	</select>
   	
-  	<!-- 특정 시/도의 구/군 별 상가 수 -->
+  	<!-- 특정 시/도의 구/군 목록 및 상가 수 -->
   	<select id="listSigunguStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
   		SELECT 
   			a.signguNm AS name,
@@ -28,7 +28,7 @@
   		ORDER BY `count` DESC, name ASC
   	</select>
   	
- 	<!-- 특정 시/도의 구/군의 동 별 상가 수 -->
+ 	<!-- 특정 시/도의 구/군의 동 목록 및 별 상가 수 -->
  	<select id="listDongStats" resultType="com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO">
  		SELECT
  			a.adongNm AS name,
