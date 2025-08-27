@@ -33,6 +33,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/api/users/me").authenticated()
 				.requestMatchers(HttpMethod.GET, "/api/areas/**").authenticated()
+				.requestMatchers(HttpMethod.GET, "/api/category/**").authenticated()
 				.anyRequest().authenticated()
 		    )
 		    .addFilterBefore(
