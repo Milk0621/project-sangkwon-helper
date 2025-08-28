@@ -7,14 +7,17 @@ function AreaSearchController({ onSearch }){
     const [sidos, setSidos] = useState([]);
     const [sigungu, setSigungu] = useState("");
     const [sigunguList, setSigunguList] = useState([]);
+
+    const [lcls, setLcls] = useState("");
+    const [lclsList, setLclsList] = useState([]);
+
     const [isSidoOpen, setIsSidoOpen] = useState(false);
     const [isSigunguOpen, setIsSigunguOpen] = useState(false);
-
-    const [category, setCategory] = useState("ALL");
-    const [sort, setSort] = useState("BIZ_DESC"); // 상가수 많은순 기본
+    const [isLclsOpen, setIsLclsOpen] = useState(false);
 
     const sidoWrapRef = useRef(null);
     const sigunguWrapRef = useRef(null);
+    const lclsWrapRef = useRef(null);
 
     // 시/도 목록
     const fetchSido = useCallback(async () => {
@@ -27,7 +30,7 @@ function AreaSearchController({ onSearch }){
             console.error("시/도 불러오기 실패", err);
             setSidos([]);
         }
-    }, []);
+    });
 
     // 시군구 목록
     const fetchSigungus = useCallback(async (sidoName) => {
@@ -42,7 +45,19 @@ function AreaSearchController({ onSearch }){
             console.error("시군구 불러오기 실패", err);
             setSigunguList([]);
         }
-    }, [category, sort]);
+    });
+
+    // 대분류 목록
+    const fetchLcls = useCallback(async () => {
+        try {
+        const res = await api.get("/category/large"); // << 여기 연결
+        const items = Array.isArray(res.data) ? res.data : res.data?.items;
+        setLclsList(Array.isArray(items) ? items : []);
+        } catch (err) {
+        console.error("대분류 불러오기 실패", err);
+        setLclsList([]);
+        }
+    }, []);
 
     // 시/도 토글
     const toggleSido = useCallback( async (e) => {
@@ -67,6 +82,20 @@ function AreaSearchController({ onSearch }){
         setIsSidoOpen(false);
     }, [isSigunguOpen, sigunguList.length, fetchSigungus, sido]);
 
+    // 대분류 토글
+    const toggleLcls = useCallback(
+        async (e) => {
+        e.preventDefault();
+        if (!isLclsOpen && lclsList.length === 0) {
+            await fetchLcls();
+        }
+        setIsLclsOpen((prev) => !prev);
+        setIsSidoOpen(false);
+        setIsSigunguOpen(false);
+        },
+        [isLclsOpen, lclsList.length, fetchLcls]
+    );
+
     // 시/도 선택
     const handleSelectSido = (name) => {
         setSido(name);
@@ -83,6 +112,12 @@ function AreaSearchController({ onSearch }){
         setIsSigunguOpen(false);
     }
 
+    const handleSelectLcls = (item) => {
+        setLcls(item.name);
+        // setLclsCode(item.code);
+        setIsLclsOpen(false);
+    };
+
     // 외부 클릭시 닫기
     useEffect(() => {
         const onClickOutside = (e) => {
@@ -92,8 +127,11 @@ function AreaSearchController({ onSearch }){
             if (sigunguWrapRef.current && !sigunguWrapRef.current.contains(e.target)) {
                 setIsSigunguOpen(false);
             }
+            if (lclsWrapRef.current && !lclsWrapRef.current.contains(e.target)) {
+                setIsLclsOpen(false);
+            }
         };
-        if (isSidoOpen || isSigunguOpen) {
+        if (isSidoOpen || isSigunguOpen || isLclsOpen) {
             document.addEventListener("mousedown", onClickOutside);
         }
         return () => document.removeEventListener("mousedown", onClickOutside);
@@ -103,7 +141,7 @@ function AreaSearchController({ onSearch }){
         <div className={styles.search}>
             <div className={styles.inputWrap} ref={sidoWrapRef}>
                 <button type="button" className={styles.filterBar} onClick={toggleSido}>
-                {sido || "시/도를 선택해주세요"}
+                    {sido || "시/도를 선택해주세요"}
                 </button>
                 {isSidoOpen && (
                 <ul className={styles.dropdown}>
@@ -119,7 +157,7 @@ function AreaSearchController({ onSearch }){
 
             <div className={styles.inputWrap} ref={sigunguWrapRef}>
                 <button type="button" className={styles.filterBar} onClick={toggleSigungu}>
-                {sigungu || "시/군/구를 선택해주세요"}
+                    {sigungu || "시/군/구를 선택해주세요"}
                 </button>
                 {isSigunguOpen && (
                 <ul className={styles.dropdown}>
@@ -133,23 +171,20 @@ function AreaSearchController({ onSearch }){
                 )}
             </div>
 
-            <select className={styles.select} value={category} onChange={(e) => setCategory(e.target.value)}>
-                <option value="ALL">전체</option>
-                <option value="카페">카페</option>
-                <option value="음식점">음식점</option>
-                <option value="편의점">편의점</option>
-                <option value="미용실">미용실</option>
-                <option value="학원">학원</option>
-                <option value="병원">병원</option>
-                <option value="의류점">의류점</option>
-                <option value="기타">기타</option>
-            </select>
-
-            <select className={styles.select} value={sort} onChange={(e) => setSort(e.target.value)}>
-                <option value="BIZ_DESC">상가수 많은순</option>
-                <option value="BIZ_ASC">상가수 적은순</option>
-                <option value="NAME_ASC">이름 오름차순</option>
-            </select>
+            <div className={styles.inputWrap} ref={lclsWrapRef}>
+                <button type="button" className={styles.filterBar} onClick={toggleLcls}>
+                    {lcls || "업종(대분류) 선택"}
+                </button>
+                {isLclsOpen && (
+                    <ul className={styles.dropdown}>
+                        {lclsList.map((item)=>(
+                            <li key={item.code} className={styles.option} onClick={()=>handleSelectLcls(item)}>
+                                {item.name}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
 
             <button className={styles.searchBtn} onClick={() => onSearch?.(sido, sigungu)}>검색</button>
         </div>
