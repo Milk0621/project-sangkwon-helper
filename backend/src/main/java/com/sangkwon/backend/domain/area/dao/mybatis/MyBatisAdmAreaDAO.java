@@ -35,8 +35,8 @@ public class MyBatisAdmAreaDAO implements AdmAreaDAO {
 
 
 	@Override
-	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu) {
-		return mapper.listDongStats(sido, sigungu);
+	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu, String lclsCode) {
+		return mapper.listDongStats(sido, sigungu, lclsCode);
 	}
 
 

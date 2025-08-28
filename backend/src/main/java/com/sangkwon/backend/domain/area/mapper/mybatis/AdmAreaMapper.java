@@ -14,7 +14,7 @@ import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 public interface AdmAreaMapper {
 	List<AreaCountDTO> listSidoStats();
     List<AreaCountDTO> listSigunguStats(@Param("sido") String sido);
-	List<AdongWithCenterDTO> listDongStats(@Param("sido") String sido, @Param("sigungu") String sigungu);
+	List<AdongWithCenterDTO> listDongStats(@Param("sido") String sido, @Param("sigungu") String sigungu, @Param("lclsCode") String lclsCode);
 	SigunguCenterDTO getSigunguCenter(@Param("sido") String sido, @Param("sigungu") String sigungu);
 	AdongCenterDTO getDongCenter(@Param("sido") String sido, @Param("sigungu") String sigungu, @Param("dong") String dong);
 }

@@ -36,9 +36,24 @@
  			c.center_lat AS centerLat,
  			c.center_lng AS centerLng
  		FROM adm_area a
- 		LEFT JOIN adong_stats s ON s.adongCd = a.adongCd
  		LEFT JOIN area_center_dong c ON c.adongCd = a.adongCd
- 		WHERE a.ctprvnNm = #{sido} and a.signguNm = #{sigungu}
+
+		<if test="lclsCode == null or lclsCode == ''">
+		    LEFT JOIN adong_stats s ON s.adongCd = a.adongCd
+		</if>
+		
+ 		<if test="lclsCode != null and lclsCode != ''">
+		    LEFT JOIN (
+		      SELECT bm.adongCd, COUNT(*) AS cnt
+		      FROM biz_master bm
+		      WHERE bm.indsLclsCd = #{lclsCode}
+		      GROUP BY bm.adongCd
+		    ) p ON p.adongCd = a.adongCd
+		</if>
+		
+ 		WHERE a.ctprvnNm = #{sido} 
+ 			AND a.signguNm = #{sigungu}
+ 		
  		GROUP BY a.adongNm, c.center_lat, c.center_lng
  		ORDER BY `count` DESC, name ASC
  	</select>

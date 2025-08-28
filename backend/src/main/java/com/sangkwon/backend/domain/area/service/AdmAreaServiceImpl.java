@@ -30,8 +30,8 @@ public class AdmAreaServiceImpl implements AdmAreaService {
 	}
 
 	@Override
-	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu) {
-		return admAreaDAO.listDongStats(sido, sigungu);
+	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu, String lclsCode) {
+		return admAreaDAO.listDongStats(sido, sigungu, lclsCode);
 	}
 
 	@Override

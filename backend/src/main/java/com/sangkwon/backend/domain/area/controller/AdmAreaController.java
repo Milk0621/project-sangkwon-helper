@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
@@ -47,8 +48,9 @@ public class AdmAreaController {
     
     // 특정 시/도와 구/군 선택 후 검색 시, 동 목록 + 수
     @GetMapping("/{sido}/{sigungu}/dong")
-    public List<AdongWithCenterDTO> listDong(@PathVariable("sido") String sido, @PathVariable("sigungu") String sigungu){
-    	return admAreaService.listDongStats(sido, sigungu);
+    public List<AdongWithCenterDTO> listDong(@PathVariable("sido") String sido, @PathVariable("sigungu") String sigungu, @RequestParam(required = false, name = "lclsCode") String lclsCode){
+    	System.out.printf(sido, sigungu, lclsCode);
+    	return admAreaService.listDongStats(sido, sigungu, lclsCode);
     }
     
     @GetMapping("/{sido}/{sigungu}/{dong}/center")

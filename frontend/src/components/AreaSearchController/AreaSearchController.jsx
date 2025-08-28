@@ -9,6 +9,7 @@ function AreaSearchController({ onSearch }){
     const [sigunguList, setSigunguList] = useState([]);
 
     const [lcls, setLcls] = useState("");
+    const [lclsCode, setLclsCode] = useState("");
     const [lclsList, setLclsList] = useState([]);
 
     const [isSidoOpen, setIsSidoOpen] = useState(false);
@@ -114,7 +115,7 @@ function AreaSearchController({ onSearch }){
 
     const handleSelectLcls = (item) => {
         setLcls(item.name);
-        // setLclsCode(item.code);
+        setLclsCode(item.code);
         setIsLclsOpen(false);
     };
 
@@ -186,7 +187,7 @@ function AreaSearchController({ onSearch }){
                 )}
             </div>
 
-            <button className={styles.searchBtn} onClick={() => onSearch?.(sido, sigungu)}>검색</button>
+            <button className={styles.searchBtn} onClick={() => onSearch?.(sido, sigungu, lclsCode)}>검색</button>
         </div>
     )
 }
