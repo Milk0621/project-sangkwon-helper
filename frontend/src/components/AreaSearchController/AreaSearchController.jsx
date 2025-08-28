@@ -135,7 +135,7 @@ function AreaSearchController({ onSearch }){
             document.addEventListener("mousedown", onClickOutside);
         }
         return () => document.removeEventListener("mousedown", onClickOutside);
-    }, [isSidoOpen, isSigunguOpen]);
+    }, [isSidoOpen, isSigunguOpen, isLclsOpen]);
 
     return(
         <div className={styles.search}>
