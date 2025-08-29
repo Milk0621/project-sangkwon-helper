@@ -12,9 +12,31 @@ import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 
 @Mapper
 public interface AdmAreaMapper {
-	List<AreaCountDTO> listSidoStats();
-    List<AreaCountDTO> listSigunguStats(@Param("sido") String sido);
-	List<AdongWithCenterDTO> listDongStats(@Param("sido") String sido, @Param("sigungu") String sigungu, @Param("lclsCode") String lclsCode);
-	SigunguCenterDTO getSigunguCenter(@Param("sido") String sido, @Param("sigungu") String sigungu);
-	AdongCenterDTO getDongCenter(@Param("sido") String sido, @Param("sigungu") String sigungu, @Param("dong") String dong);
+	List<AreaCountDTO> listSidoStats(
+			@Param("lclsCode") String lclsCode, 
+			@Param("mclsCode") String mclsCode, 
+			@Param("sclsCode") String sclsCode
+	);
+    List<AreaCountDTO> listSigunguStats(
+    		@Param("sido") String sido, 
+    		@Param("lclsCode") String lclsCode,
+    		@Param("mclsCode") String mclsCode, 
+    		@Param("sclsCode") String sclsCode
+    );
+	List<AdongWithCenterDTO> listDongStats(
+			@Param("sido") String sido, 
+			@Param("sigungu") String sigungu, 
+			@Param("lclsCode") String lclsCode, 
+			@Param("mclsCode") String mclsCode, 
+			@Param("sclsCode") String sclsCode
+	);
+	SigunguCenterDTO getSigunguCenter(
+			@Param("sido") String sido, 
+			@Param("sigungu") String sigungu
+	);
+	AdongCenterDTO getDongCenter(
+			@Param("sido") String sido, 
+			@Param("sigungu") String sigungu, 
+			@Param("dong") String dong
+	);
 }

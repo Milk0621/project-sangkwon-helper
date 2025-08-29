@@ -3,59 +3,97 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper">
   	
-  	<!-- 시/도 목록 및 상가 수 -->
-  	<select id="listSidoStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
-  		SELECT 
-  			a.ctprvnNm AS name,
-  			SUM(s.store_count) AS `count`
-  		FROM adm_area a
-  		JOIN adong_stats s ON s.adongCd = a.adongCd
-  		GROUP BY a.ctprvnNm
-  		HAVING name IS NOT NULL AND name != ''
-  		ORDER BY `count` DESC, name ASC
-  	</select>
+  	<!-- 시/도 목록 및 상가 수 (카테고리 필터 선택적) -->
+	<select id="listSidoStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+		SELECT
+		  a.ctprvnNm AS name,
+		  COALESCE(SUM(p.cnt), 0) AS `count`
+		FROM adm_area a
+		LEFT JOIN (
+			SELECT
+			  adongCd,
+			  SUM(store_cnt) AS cnt
+			FROM emd_upjong_counts
+			<where>
+			  <if test="lclsCode != null and lclsCode != ''">
+			    AND indsLclsCd = #{lclsCode}
+			  </if>
+			  <if test="mclsCode != null and mclsCode != ''">
+			    AND indsMclsCd = #{mclsCode}
+			  </if>
+			  <if test="sclsCode != null and sclsCode != ''">
+			    AND indsSclsCd = #{sclsCode}
+			  </if>
+			</where>
+			GROUP BY adongCd
+		) p ON p.adongCd = a.adongCd
+		GROUP BY a.ctprvnNm
+		HAVING name IS NOT NULL AND name != ''
+		ORDER BY `count` DESC, name ASC
+	</select>
   	
   	<!-- 특정 시/도의 구/군 목록 및 상가 수 -->
   	<select id="listSigunguStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
-  		SELECT 
-  			a.signguNm AS name,
-  			SUM(s.store_count) AS `count`
-  		FROM adm_area a
-  		JOIN adong_stats s ON s.adongCd = a.adongCd
-  		WHERE a.ctprvnNm = #{sido}
-  		GROUP BY a.signguNm
-  		HAVING name IS NOT NULL AND name != ''
-  		ORDER BY `count` DESC, name ASC
+	SELECT
+    	a.signguNm AS name,
+    	COALESCE(SUM(p.cnt), 0) AS `count`
+    FROM adm_area a
+    LEFT JOIN (
+		SELECT
+	        adongCd,
+	        SUM(store_cnt) AS cnt
+      	FROM emd_upjong_counts
+		<where>
+			<if test="lclsCode != null and lclsCode != ''">
+				AND indsLclsCd = #{lclsCode}
+			</if>
+			<if test="mclsCode != null and mclsCode != ''">
+				AND indsMclsCd = #{mclsCode}
+			</if>
+			<if test="sclsCode != null and sclsCode != ''">
+				AND indsSclsCd = #{sclsCode}
+			</if>
+		</where>
+		GROUP BY adongCd
+    ) p ON p.adongCd = a.adongCd
+    WHERE a.ctprvnNm = #{sido}
+    GROUP BY a.signguNm
+    HAVING name IS NOT NULL AND name != ''
+    ORDER BY `count` DESC, name ASC
   	</select>
   	
  	<!-- 특정 시/도의 구/군의 동 목록 및 별 상가 수 -->
  	<select id="listDongStats" resultType="com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO">
- 		SELECT
- 			a.adongNm AS name,
- 			SUM(s.store_count) AS `count`,
- 			c.center_lat AS centerLat,
- 			c.center_lng AS centerLng
- 		FROM adm_area a
- 		LEFT JOIN area_center_dong c ON c.adongCd = a.adongCd
-
-		<if test="lclsCode == null or lclsCode == ''">
-		    LEFT JOIN adong_stats s ON s.adongCd = a.adongCd
-		</if>
-		
- 		<if test="lclsCode != null and lclsCode != ''">
-		    LEFT JOIN (
-		      SELECT bm.adongCd, COUNT(*) AS cnt
-		      FROM biz_master bm
-		      WHERE bm.indsLclsCd = #{lclsCode}
-		      GROUP BY bm.adongCd
-		    ) p ON p.adongCd = a.adongCd
-		</if>
-		
- 		WHERE a.ctprvnNm = #{sido} 
- 			AND a.signguNm = #{sigungu}
- 		
- 		GROUP BY a.adongNm, c.center_lat, c.center_lng
- 		ORDER BY `count` DESC, name ASC
+    SELECT
+		a.adongNm AS name,
+		COALESCE(SUM(p.cnt), 0) AS `count`,
+		c.center_lat AS centerLat,
+		c.center_lng AS centerLng
+    FROM adm_area a
+    LEFT JOIN area_center_dong c
+		ON c.adongCd = a.adongCd
+    LEFT JOIN (
+		SELECT
+			adongCd,
+			SUM(store_cnt) AS cnt
+		FROM emd_upjong_counts
+		<where>
+			<if test="lclsCode != null and lclsCode != ''">
+				AND indsLclsCd = #{lclsCode}
+			</if>
+			<if test="mclsCode != null and mclsCode != ''">
+				AND indsMclsCd = #{mclsCode}
+			</if>
+			<if test="sclsCode != null and sclsCode != ''">
+				AND indsSclsCd = #{sclsCode}
+			</if>
+		</where>
+		GROUP BY adongCd
+    ) p ON p.adongCd = a.adongCd
+    WHERE a.ctprvnNm = #{sido}
+      AND a.signguNm = #{sigungu}
+    GROUP BY a.adongNm, c.center_lat, c.center_lng
+    ORDER BY `count` DESC, name ASC
  	</select>
  
 	<!-- 구 중심좌표 -->

@@ -20,18 +20,18 @@ public class AdmAreaServiceImpl implements AdmAreaService {
 	}
 
 	@Override
-	public List<AreaCountDTO> listSidoStats() {
-		return admAreaDAO.listSidoStats();
+	public List<AreaCountDTO> listSidoStats(String lclsCode, String mclsCode, String sclsCode) {
+		return admAreaDAO.listSidoStats(lclsCode, mclsCode, sclsCode);
 	}
 
 	@Override
-	public List<AreaCountDTO> listSigunguStats(String sido) {
-		return admAreaDAO.listSigunguStats(sido);
+	public List<AreaCountDTO> listSigunguStats(String sido, String lclsCode, String mclsCode, String sclsCode) {
+		return admAreaDAO.listSigunguStats(sido, lclsCode, mclsCode, sclsCode);
 	}
 
 	@Override
-	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu, String lclsCode) {
-		return admAreaDAO.listDongStats(sido, sigungu, lclsCode);
+	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu, String lclsCode, String mclsCode, String sclsCode) {
+		return admAreaDAO.listDongStats(sido, sigungu, lclsCode, mclsCode, sclsCode);
 	}
 
 	@Override

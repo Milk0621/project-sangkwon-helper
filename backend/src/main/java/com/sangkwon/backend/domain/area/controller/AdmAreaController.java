@@ -27,14 +27,23 @@ public class AdmAreaController {
 	
 	// 시/도 목록 + 수
     @GetMapping("/sidos")
-    public List<AreaCountDTO> listSidos(){
-        return admAreaService.listSidoStats();
+    public List<AreaCountDTO> listSidos(
+    		@RequestParam(value = "lclsCode", required = false) String lclsCode,
+    	    @RequestParam(value = "mclsCode", required = false) String mclsCode,
+    	    @RequestParam(value = "sclsCode", required = false) String sclsCode
+    ){
+        return admAreaService.listSidoStats(lclsCode, mclsCode, sclsCode);
     }
 
     // 특정 시/도 선택 시, 구/군 목록 + 수
     @GetMapping("/{sido}/sigungus")
-    public List<AreaCountDTO> listSigungu(@PathVariable("sido") String sido){
-        return admAreaService.listSigunguStats(sido);
+    public List<AreaCountDTO> listSigungu(
+    		@PathVariable("sido") String sido,
+    		@RequestParam(value = "lclsCode", required = false) String lclsCode,
+    	    @RequestParam(value = "mclsCode", required = false) String mclsCode,
+    	    @RequestParam(value = "sclsCode", required = false) String sclsCode
+    	){
+        return admAreaService.listSigunguStats(sido, lclsCode, mclsCode, sclsCode);
     }
     
     @GetMapping("/{sido}/{sigungu}/center")
@@ -48,9 +57,14 @@ public class AdmAreaController {
     
     // 특정 시/도와 구/군 선택 후 검색 시, 동 목록 + 수
     @GetMapping("/{sido}/{sigungu}/dong")
-    public List<AdongWithCenterDTO> listDong(@PathVariable("sido") String sido, @PathVariable("sigungu") String sigungu, @RequestParam(required = false, name = "lclsCode") String lclsCode){
-    	System.out.printf(sido, sigungu, lclsCode);
-    	return admAreaService.listDongStats(sido, sigungu, lclsCode);
+    public List<AdongWithCenterDTO> listDong(
+    		@PathVariable("sido") String sido, 
+    		@PathVariable("sigungu") String sigungu, 
+    		@RequestParam(value = "lclsCode", required = false) String lclsCode,
+    	    @RequestParam(value = "mclsCode", required = false) String mclsCode,
+    	    @RequestParam(value = "sclsCode", required = false) String sclsCode
+    	){
+    	return admAreaService.listDongStats(sido, sigungu, lclsCode, mclsCode, sclsCode);
     }
     
     @GetMapping("/{sido}/{sigungu}/{dong}/center")
