@@ -140,7 +140,7 @@ function AreaSearchController({ onSearch }){
 
     return(
         <div className={styles.search}>
-            <div className={styles.inputWrap} ref={sidoWrapRef}>
+            <div className={`${styles.inputWrap} ${styles.sido}`} ref={sidoWrapRef}>
                 <button type="button" className={styles.filterBar} onClick={toggleSido}>
                     {sido || "시/도를 선택해주세요"}
                 </button>
@@ -156,7 +156,7 @@ function AreaSearchController({ onSearch }){
                 )}
             </div>
 
-            <div className={styles.inputWrap} ref={sigunguWrapRef}>
+            <div className={`${styles.inputWrap} ${styles.sigungu}`} ref={sigunguWrapRef}>
                 <button type="button" className={styles.filterBar} onClick={toggleSigungu}>
                     {sigungu || "시/군/구를 선택해주세요"}
                 </button>
@@ -172,7 +172,7 @@ function AreaSearchController({ onSearch }){
                 )}
             </div>
 
-            <div className={styles.inputWrap} ref={lclsWrapRef}>
+            <div className={`${styles.inputWrap} ${styles.lcls}`} ref={lclsWrapRef}>
                 <button type="button" className={styles.filterBar} onClick={toggleLcls}>
                     {lcls || "업종(대분류) 선택"}
                 </button>
