@@ -63,6 +63,7 @@ function Map() {
             setMarkers(markers);
 
             fetchSigunguCenter(sidoName, sigunguName);
+
         } catch (err) {
             console.error("동 불러오기 실패", err);
             setDongList([]);
@@ -72,7 +73,7 @@ function Map() {
     // 동 선택
     const handleSelectDong = (name) => {
         setDong(name);
-        setRegion(`${appliedSido} ${appliedSigungu} ${name}`);
+        setRegion(`${appliedSido} ${appliedSigungu}`);
         fetchDongCenter(appliedSido, appliedSigungu, name);
     }
 
@@ -118,11 +119,11 @@ function Map() {
                                 <div className={styles.adong} onClick={()=>{handleSelectDong(item.name)}}>
                                     <div>
                                         <p>{appliedSigungu} {item.name}</p>
-                                        <span>{item.count}개</span>
+                                        <span>{(item.count || 0).toLocaleString()}개</span>
                                     </div>
                                     <div>
-                                        <span>850만원</span>
-                                        <span>15,420명</span>
+                                        <span>Top 업종: {item.topUpjong || '-'}</span>
+                                        <span>상세보기</span>
                                     </div>
                                 </div>
                             ))}
