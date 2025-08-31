@@ -9,18 +9,6 @@
   flex: 1 1 auto;
 }
 
-.inputWrap.sido {
-  flex: 0 0 360px; /* 고정 크기 */
-}
-
-.inputWrap.sigungu {
-  flex: 0 0 360px;
-}
-
-.inputWrap.lcls {
-  flex: 1; /* 남은 공간 전부 사용 */
-}
-
 .filterBar {
   background-color: #fff;
   width: 100%;

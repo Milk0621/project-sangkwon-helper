@@ -171,22 +171,7 @@ function AreaSearchController({ onSearch }){
                 </ul>
                 )}
             </div>
-
-            <div className={`${styles.inputWrap} ${styles.lcls}`} ref={lclsWrapRef}>
-                <button type="button" className={styles.filterBar} onClick={toggleLcls}>
-                    {lcls || "업종(대분류) 선택"}
-                </button>
-                {isLclsOpen && (
-                    <ul className={styles.dropdown}>
-                        {lclsList.map((item)=>(
-                            <li key={item.code} className={styles.option} onClick={()=>handleSelectLcls(item)}>
-                                {item.name}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-
+            
             <button className={styles.searchBtn} onClick={() => onSearch?.(sido, sigungu, lclsCode)}>검색</button>
         </div>
     )
