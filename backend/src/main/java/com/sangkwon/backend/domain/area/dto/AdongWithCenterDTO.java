@@ -5,14 +5,16 @@ public class AdongWithCenterDTO {
 	private int count;
 	private Double centerLat;
 	private Double centerLng;
+	private String topUpjong;
 	
 	public AdongWithCenterDTO() {}
 
-	public AdongWithCenterDTO(String name, int count, Double centerLat, Double centerLng) {
+	public AdongWithCenterDTO(String name, int count, Double centerLat, Double centerLng, String totalUpjong) {
 		this.name = name;
 		this.count = count;
 		this.centerLat = centerLat;
 		this.centerLng = centerLng;
+		this.topUpjong = totalUpjong;
 	}
 
 	public String getName() {
@@ -45,6 +47,14 @@ public class AdongWithCenterDTO {
 
 	public void setCenterLng(Double centerLng) {
 		this.centerLng = centerLng;
+	}
+
+	public String getTopUpjong() {
+		return topUpjong;
+	}
+
+	public void setTopUpjong(String topUpjong) {
+		this.topUpjong = topUpjong;
 	}
 	
 }
