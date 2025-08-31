@@ -23,20 +23,20 @@ public class MyBatisAdmAreaDAO implements AdmAreaDAO {
 
 
 	@Override
-	public List<AreaCountDTO> listSidoStats(String lclsCode, String mclsCode, String sclsCode) {
-		return mapper.listSidoStats(lclsCode, mclsCode, sclsCode);
+	public List<AreaCountDTO> listSidoStats() {
+		return mapper.listSidoStats();
 	}
 
 
 	@Override
-	public List<AreaCountDTO> listSigunguStats(String sido, String lclsCode, String mclsCode, String sclsCode) {
-		return mapper.listSigunguStats(sido, lclsCode, mclsCode, sclsCode);
+	public List<AreaCountDTO> listSigunguStats(String sido) {
+		return mapper.listSigunguStats(sido);
 	}
 
 
 	@Override
-	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu, String lclsCode, String mclsCode, String sclsCode) {
-		return mapper.listDongStats(sido, sigungu, lclsCode, mclsCode, sclsCode);
+	public List<AdongWithCenterDTO> listDongStats(String sido, String sigungu) {
+		return mapper.listDongStats(sido, sigungu);
 	}
 
 
