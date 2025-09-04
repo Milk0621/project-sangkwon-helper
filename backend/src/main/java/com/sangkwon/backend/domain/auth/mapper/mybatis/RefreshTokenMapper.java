@@ -10,19 +10,27 @@ import com.sangkwon.backend.domain.auth.entity.RefreshToken;
 @Mapper
 public interface RefreshTokenMapper {
 	
-	RefreshToken findByEmail(@Param("email") String email);
+	public void saveRefreshToken(
+			@Param("email") String email, 
+			@Param("token") String token,
+			@Param("jti") String jti, 
+			@Param("expiresAt") LocalDateTime expiresAt, 
+			@Param("now") LocalDateTime now
+	);
 	
-	void insertToken(RefreshToken refreshToken);
+	public RefreshToken findRefreshByJti(@Param("jti") String jti);
 	
-	void updateToken(RefreshToken regreshToken);
+	public void revokeByJti(@Param("jti") String jti, @Param("replacedByJti") String replacedByJti);
 
-	RefreshToken findByToken(String refreshToken);
-
-	void insertBlacklistedToken(
+	public void revokeAllByEmail(String email);
+	
+	public void deleteExpiredRefreshTokens(LocalDateTime now);
+	
+	public void insertBlacklistedToken(
 			@Param("token") String token,
 	        @Param("expiresAt") LocalDateTime expiresAt,
 	        @Param("createdAt") LocalDateTime createdAt
 	);
 
-	Integer isTokenBlacklisted(String token);
+	public Integer isTokenBlacklisted(String token);
 }

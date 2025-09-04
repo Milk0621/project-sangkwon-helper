@@ -4,31 +4,42 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sangkwon.backend.domain.auth.mapper.mybatis.RefreshTokenMapper">
 	
-	<select id="findByEmail" resultType="com.sangkwon.backend.domain.auth.entity.RefreshToken">
-		select * from refresh_token where email = #{email}
-	</select>
-	
-	<insert id="insertToken">
-		insert into refresh_token (email, token, expires_at, created_at)
-		values (#{email}, #{token}, #{expiresAt}, #{createdAt})
+	<!-- 저장: 회전할 때마다 "새 행"을 추가 -->
+	<insert id="saveRefreshToken">
+		INSERT INTO refresh_token (email, token, jti, revoked, replaced_by_jti, expires_at, created_at)
+		VALUES (#{email}, #{token}, #{jti}, 0, NULL, #{expiresAt}, #{now})
 	</insert>
 	
-	<update id="updateToken">
-		update refresh_token 
-		set 
-			token = #{token},
-			expires_at = #{expiresAt},
-			created_at = #{createdAt}
-		where email = #{email}
+	<!-- jti 기준 조회 -->
+	<select id="findRefreshByJti" resultType="com.sangkwon.backend.domain.auth.entity.RefreshToken">
+		SELECT * FROM refresh_token WHERE jti = #{jti}
+	</select>
+	
+	<!-- 회전/로그아웃 등으로 무효화 -->
+	<update id="revokeByJti">
+		UPDATE refresh_token
+		SET revoked = 1,
+		    replaced_by_jti = #{replacedByJti}
+		WHERE jti = #{jti}
 	</update>
 	
-	<select id="findByToken" resultType="com.sangkwon.backend.domain.auth.entity.RefreshToken">
-	    select * from refresh_token where token = #{token}
-	</select>
+	<!-- 사용자 전체 무효화(강제 로그아웃 등) -->
+	<update id="revokeAllByEmail">
+		UPDATE refresh_token
+		SET revoked = 1
+		WHERE email = #{email} AND revoked = 0
+	</update>
+	
+
+	<!-- 만료 청소(선택) -->
+	<delete id="deleteExpiredRefreshTokens">
+		DELETE FROM refresh_token
+		WHERE expires_at <![CDATA[<]]> #{now}
+	</delete>	
 	
 	<insert id="insertBlacklistedToken">
 	    insert into token_blacklist (token, expires_at, created_at)
-	    values (#{token}, #{expiresAt}, #{createdAt})
+	    values (#{token}, #{expiresAt}, #{now})
 	</insert>
 	
 	<select id="isTokenBlacklisted" resultType="int">

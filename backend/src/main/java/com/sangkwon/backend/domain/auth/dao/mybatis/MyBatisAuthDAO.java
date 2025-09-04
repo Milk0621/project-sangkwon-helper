@@ -11,41 +11,46 @@ import com.sangkwon.backend.domain.auth.mapper.mybatis.RefreshTokenMapper;
 
 @Repository
 public class MyBatisAuthDAO implements AuthDAO {
-	private final RefreshTokenMapper refreshTokenMapper;
+	private final RefreshTokenMapper mapper;
 
 	@Autowired
-	public MyBatisAuthDAO(RefreshTokenMapper refreshTokenMapper) {
-		this.refreshTokenMapper = refreshTokenMapper;
+	public MyBatisAuthDAO(RefreshTokenMapper mapper) {
+		this.mapper = mapper;
 	}
 
 	@Override
-	public RefreshToken findByEmail(String email) {
-		return refreshTokenMapper.findByEmail(email);
+	public void saveRefreshToken(String email, String token, String jti, LocalDateTime expiresAt, LocalDateTime now) {
+		mapper.saveRefreshToken(email, token, jti, expiresAt, now);
 	}
 
 	@Override
-	public void insertToken(RefreshToken refreshToken) {
-		refreshTokenMapper.insertToken(refreshToken);
+	public RefreshToken findRefreshByJti(String jti) {
+		return mapper.findRefreshByJti(jti);
 	}
 
 	@Override
-	public void updateToken(RefreshToken refreshToken) {
-		refreshTokenMapper.updateToken(refreshToken);
+	public void revokeByJti(String jti, String replacedByJti) {
+		mapper.revokeByJti(jti, replacedByJti);
 	}
 
 	@Override
-	public RefreshToken findByToken(String refreshToken) {
-		return refreshTokenMapper.findByToken(refreshToken);
+	public void revokeAllByEmail(String email) {
+		mapper.revokeAllByEmail(email);
 	}
 
+	@Override
+	public void deleteExpiredRefreshTokens(LocalDateTime now) {
+		mapper.deleteExpiredRefreshTokens(now);
+	}
+	
 	@Override
 	public void insertBlacklistedToken(String token, LocalDateTime expiresAt, LocalDateTime now) {
-		refreshTokenMapper.insertBlacklistedToken(token, expiresAt, now);
+		mapper.insertBlacklistedToken(token, expiresAt, now);
 	}
 
 	@Override
 	public boolean isTokenBlacklisted(String token) {
-		Integer result = refreshTokenMapper.isTokenBlacklisted(token);
+		Integer result = mapper.isTokenBlacklisted(token);
 	    return result != null && result == 1;
 	}
 		

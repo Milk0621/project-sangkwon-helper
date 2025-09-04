@@ -39,42 +39,21 @@ public class AuthServiceImpl implements AuthService {
 	public TokenResponseDTO login(LoginRequestDTO request) {
 		// 사용자 조회
 		Users user = usersDAO.findByEmail(request.getEmail());
-		
-		if (user == null) {
-			throw new RuntimeException("사용자가 존재하지 않습니다.");
-		}
-		
-		// 비밀번호 일치 여부 검증
-		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-		}
+		if (user == null) throw new RuntimeException("사용자가 존재하지 않습니다.");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
 
 		// 토큰 생성
-		String accessToken = jwtTokenProvider.generateAccessToken(request.getEmail());
-		String refreshToken = jwtTokenProvider.generateRefreshToken();
+        String email = request.getEmail();
+		String accessToken = jwtTokenProvider.generateAccessToken(email);
+		String refreshToken = jwtTokenProvider.generateRefreshToken(email);
+		String jti = jwtTokenProvider.getJti(refreshToken);
+		LocalDateTime exp = jwtTokenProvider.getExpiration(refreshToken);
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime expiresAt = now.plusDays(7);
 
-		// 기존 RefreshToken 존재 여부 확인
-		RefreshToken existing = authDAO.findByEmail(request.getEmail());
-
-		if (existing == null) {
-			// 새로 저장
-			RefreshToken newToken = new RefreshToken(
-				0L,
-				request.getEmail(),
-				refreshToken,
-				expiresAt,
-				now
-			);
-			authDAO.insertToken(newToken);
-		} else {
-			// 기존 토큰 갱신
-			existing.setToken(refreshToken);
-			existing.setExpiresAt(expiresAt);
-			existing.setCreatedAt(now);
-			authDAO.updateToken(existing);
-		}
+		// RefreshToken 저장(항상 insert, 덮어쓰기 x)
+		authDAO.saveRefreshToken(email, refreshToken, jti, exp, now);
 
 		return new TokenResponseDTO(accessToken, refreshToken);
 	}
@@ -88,37 +67,54 @@ public class AuthServiceImpl implements AuthService {
 		user.setNumber(dto.getNumber());
 		user.setIndustry(dto.getIndustry());
 		user.setCreate_at(LocalDateTime.now());
-
 		usersDAO.insertUser(user);			
 	}
 
+	// 쿠키로 받은 refreshToken을 검증/회전하여 새 Access(및 새 Refresh 발급값 반환)
 	@Override
 	public TokenResponseDTO reissueAccessToken(String refreshToken) {
-		// 토큰 유효성 검사
+		// 형식, 서명, 만료 검증
 		if (!jwtTokenProvider.validateToken(refreshToken)) {
 			throw new RuntimeException("유효하지 않은 Refresh Token입니다.");
 		}
 		
-		// DB에 저장된 토큰인지 확인
-		RefreshToken saved = authDAO.findByToken(refreshToken);
-	    if (saved == null || saved.getExpiresAt().isBefore(LocalDateTime.now())) {
-	        throw new RuntimeException("만료되었거나 저장되지 않은 Refresh Token입니다.");
-	    }
+		// jti로 저장 여부, 상태 확인
+		String jti = jwtTokenProvider.getJti(refreshToken);
+		RefreshToken stored = authDAO.findRefreshByJti(jti);
+		if (stored == null || stored.isRevoked() || stored.getExpiresAt().isBefore(LocalDateTime.now())) {
+			throw new RuntimeException("만료되었거나 무효화된 Refresh Token입니다.");
+		}
 		
-		// 새 Access Token 발급
-	    String newAccessToken = jwtTokenProvider.generateAccessToken(saved.getEmail());
-
-	    return new TokenResponseDTO(newAccessToken, refreshToken); // 기존 refreshToken 재사용		
+		String email = jwtTokenProvider.getUserEmailFromToken(refreshToken);
+		
+		// 새 토큰 발급 (회전)
+		String newAccess = jwtTokenProvider.generateAccessToken(email);
+		String newRefresh = jwtTokenProvider.generateRefreshToken(email);
+		String newJti = jwtTokenProvider.getJti(newRefresh);
+		LocalDateTime newExp = jwtTokenProvider.getExpiration(newRefresh);
+		LocalDateTime now  = LocalDateTime.now();
+		
+		// 기존 jti 무효화 + 새 리프레시 저장
+        authDAO.revokeByJti(jti, newJti);
+        authDAO.saveRefreshToken(email, newJti, newRefresh, newExp, now);
+        
+        // 새 엑세스 반환(새 리프레시는 컨트롤러에서 쿠키로 세팅)
+        return new TokenResponseDTO(newAccess, newRefresh);
 	}
 
 	@Override
-	public void logout(String token) {
-		if (!jwtTokenProvider.validateToken(token)) {
+	public void logout(String accessToken) {
+		if (!jwtTokenProvider.validateToken(accessToken)) {
 			throw new RuntimeException("유효하지 않은 Access Token입니다.");
 		}
 		
-		LocalDateTime expiresAt = jwtTokenProvider.getExpiration(token);
-		authDAO.insertBlacklistedToken(token, expiresAt, LocalDateTime.now());
+		// 엑세스 블랙리스트
+		LocalDateTime exp = jwtTokenProvider.getExpiration(accessToken);
+        authDAO.insertBlacklistedToken(accessToken, exp, LocalDateTime.now());
+	
+        // 해당 사용자 리프레시 전부 무효화
+		String email = jwtTokenProvider.getUserEmailFromToken(accessToken);
+        authDAO.revokeAllByEmail(email);
 	}
 	 
 }
