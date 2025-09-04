@@ -3,6 +3,7 @@ package com.sangkwon.backend.domain.auth.jwt;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,21 +34,32 @@ public class JwtTokenProvider {
 	public String generateAccessToken(String email) {
 		Date now = new Date();
 		Date expiry = new Date(now.getTime() + accessTokenExpiration);
+		String jti = UUID.randomUUID().toString();
 		
 		return Jwts.builder()
 				.setSubject(email)			// sub: 사용자 식별자
+				.setId(jti)
 				.setIssuedAt(now)			// iat: 발급 시간
 				.setExpiration(expiry)		// exp: 만료 시간
 				.signWith(key, SignatureAlgorithm.HS256) // 서명 알고리즘과 키 설정
 				.compact();					// JWT 문자열로 변환 (최종 결과)
 	}
 	
+	public String getJti(String token) {
+	    Claims c = Jwts.parserBuilder().setSigningKey(key).build()
+	                 .parseClaimsJws(token).getBody();
+	    return c.getId();
+	}
+	
 	// Refresh Token 생성
-	public String generateRefreshToken() {
+	public String generateRefreshToken(String email) {
 		Date now = new Date();
 		Date expiry = new Date(now.getTime() + refreshTokenExpiration);
+		String jti = UUID.randomUUID().toString();
 		
 		return Jwts.builder()
+		        .setSubject(email)     // 반드시 sub 넣기
+		        .setId(jti)            // jti 넣기
 				.setIssuedAt(now)
 				.setExpiration(expiry)
 				.signWith(key, SignatureAlgorithm.HS256)
