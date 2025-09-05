@@ -95,7 +95,12 @@
   margin: 0;
 }
 
-.adong span {
+.adong span, .detailBtn {
   font-size: 0.85rem;
   color: #565f6c;
+  padding: 0;
+}
+
+.detailBtn:hover {
+  text-decoration: underline;
 }

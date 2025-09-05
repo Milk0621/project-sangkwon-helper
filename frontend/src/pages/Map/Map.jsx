@@ -3,8 +3,11 @@ import KakaoMap from "../../components/KakaoMap/KakaoMap";
 import styles from "./Map.module.css";
 import api from "../../api/api";
 import AreaSearchController from "../../components/AreaSearchController/AreaSearchController";
+import { useNavigate } from "react-router-dom";
 
 function Map() {
+    const navigate = useNavigate();
+
     const [appliedSido, setAppliedSido] = useState("");
     const [appliedSigungu, setAppliedSigungu] = useState("");
     const [dong, setDong] = useState("");
@@ -87,6 +90,12 @@ function Map() {
         setSelectedAdong({ centerLat: marker.lat, centerLng: marker.lng });
     }
 
+    const handleDetailClick = (e, item) => {
+        e.stopPropagation();
+        const path = `/map/${appliedSido}/${appliedSigungu}/${item.name}`;
+        navigate(path);
+    }
+
     return(
         <>
             <div className="wrap margin">
@@ -123,7 +132,7 @@ function Map() {
                                     </div>
                                     <div>
                                         <span>Top 업종: {item.topUpjong || '-'}</span>
-                                        <span>상세보기</span>
+                                        <button className={styles.detailBtn} onClick={(e) => handleDetailClick(e, item)}>상세보기</button>
                                     </div>
                                 </div>
                             ))}
