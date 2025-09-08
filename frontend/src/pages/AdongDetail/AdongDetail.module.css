@@ -1,0 +1,63 @@
+.adongDtailBg {
+    background-color: var(--light-gray);
+    text-align: left;
+}
+
+.adongDtailBg span {
+    color: #5d6871;
+}
+
+.title {
+    display: flex;
+    gap: .5rem;
+}
+
+.title button {
+    padding: 0;
+}
+
+.title h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.contentTop {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.contentBox {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    padding: 1.5rem 2rem;
+}
+
+.contentTop .contentBox p {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.contentMid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.colSpan2 {
+    grid-column: span 2;
+}
+
+.contentMid .contentBox p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.contentMid .contentBox span {
+    font-size: .95rem;
+}
