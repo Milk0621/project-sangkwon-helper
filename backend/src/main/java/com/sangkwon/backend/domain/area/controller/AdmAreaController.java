@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
@@ -13,6 +14,8 @@ import com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 import com.sangkwon.backend.domain.area.service.AdmAreaService;
+
+import sun.tools.serialver.resources.serialver;
 
 @RestController
 @RequestMapping("/api/areas")
@@ -59,4 +62,11 @@ public class AdmAreaController {
         }
     	return ResponseEntity.ok(dto);
     }
+    
+    @GetMapping("/{sido}/{sigungu}/{dong}/stats")
+    public ResponseEntity<?> stats(@PathVariable String sido, @PathVariable String sigungu, @PathVariable String dong, @RequestParam(defaultValue = "6") int topN){
+    	AdongStatsDTO dto = admAreaService.getStats(sido, sigungu, dong, topN);
+    	if (dto == null) return ResponseEntity.notFound().build();
+    	return ResponseEntity.ok(dto);
+    };
 }
