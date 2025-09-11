@@ -4,18 +4,18 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.sangkwon.backend.domain.area.dao.AdmAreaDAO;
+import com.sangkwon.backend.domain.area.dao.AreaReadDAO;
 import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 
 @Service
-public class AdmAreaServiceImpl implements AdmAreaService {
+public class AreaReadServiceImpl implements AreaReadService {
 	
-	private final AdmAreaDAO admAreaDAO;
+	private final AreaReadDAO admAreaDAO;
 
-	public AdmAreaServiceImpl(AdmAreaDAO admAreaDAO) {
+	public AreaReadServiceImpl(AreaReadDAO admAreaDAO) {
 		this.admAreaDAO = admAreaDAO;
 	}
 

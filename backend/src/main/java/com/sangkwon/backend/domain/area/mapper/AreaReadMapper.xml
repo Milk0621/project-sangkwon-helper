@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sangkwon.backend.domain.area.mapper.AreaReadMapper">
+
+	<!-- 공통 SQL 조각 -->
+	<sql id="emdTotalByAdong">
+		SELECT adongCd, SUM(store_cnt) AS cnt
+		FROM emd_upjong_counts
+		GROUP BY adongCd
+	</sql>
+	
+	<!-- 시/도 목록 및 상가 수 -->
+	<select id="listSidoStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+		SELECT a.ctprvnNm AS name, COALESCE(SUM(p.cnt), 0) AS `count`
+		FROM adm_area a
+		LEFT JOIN ( <include refid="emdTotalByAdong" /> ) p ON p.adongCd = a.adongCd
+		GROUP BY a.ctprvnNm
+		HAVING name IS NOT NULL AND name != ''
+		ORDER BY `count` DESC, name ASC
+	</select>
+	
+	<!-- 특정 시/도의 구/군 목록 및 상가 수 -->
+	<select id="listSigunguStats" resultType="com.sangkwon.backend.domain.area.dto.AreaCountDTO">
+		SELECT a.signguNm AS name, COALESCE(SUM(p.cnt), 0) AS `count`
+		FROM adm_area a
+		LEFT JOIN ( <include refid="emdTotalByAdong" /> ) p ON p.adongCd = a.adongCd
+		WHERE a.ctprvnNm = #{sido}
+		GROUP BY a.signguNm
+		HAVING name IS NOT NULL AND name != ''
+		ORDER BY `count` DESC, name ASC
+	</select>
+	
+	<!-- 특정 시/도의 구/군의 동 목록 및 상가 수 + 중심좌표 + 최다 업종 -->
+	<select id="listDongStats" resultType="com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO">
+		SELECT
+			a.adongNm                  AS name,
+			COALESCE(tot.total_cnt,0)  AS `count`,
+			c.center_lat               AS centerLat,
+			c.center_lng               AS centerLng,
+			rc.indsLclsNm              AS topUpjong
+		FROM adm_area a
+		LEFT JOIN area_center_dong c
+			ON c.adongCd = a.adongCd
+		LEFT JOIN (
+			SELECT e.adongCd, SUM(e.store_cnt) AS total_cnt
+			FROM emd_upjong_counts e
+			GROUP BY e.adongCd
+		) tot ON tot.adongCd = a.adongCd
+		LEFT JOIN (
+			SELECT adongCd, indsLclsCd, cnt FROM (
+				SELECT
+					e.adongCd, e.indsLclsCd, SUM(e.store_cnt) AS cnt,
+					ROW_NUMBER() OVER (PARTITION BY e.adongCd ORDER BY SUM(e.store_cnt) DESC) AS rn
+				FROM emd_upjong_counts e
+				GROUP BY e.adongCd, e.indsLclsCd
+			) x WHERE x.rn = 1
+		) topm ON topm.adongCd = a.adongCd
+		LEFT JOIN raw_category rc ON rc.indsLclsCd = topm.indsLclsCd
+		WHERE a.ctprvnNm = #{sido}
+			AND a.signguNm = #{sigungu}
+		GROUP BY a.adongCd, a.adongNm, c.center_lat, c.center_lng, rc.indsLclsNm
+		ORDER BY `count` DESC, name ASC
+	</select>
+	
+	<!-- 구 중심좌표 -->
+	<select id="getSigunguCenter" resultType="com.sangkwon.backend.domain.area.dto.SigunguCenterDTO">
+		SELECT ctprvnNm AS sido, signguNm AS sigungu, center_lat AS centerLat, center_lng AS centerLng
+		FROM area_center_gu
+		WHERE ctprvnNm = #{sido} AND signguNm = #{sigungu}
+	</select>
+	
+	<!-- 동 중심좌표 -->
+	<select id="getDongCenter" resultType="com.sangkwon.backend.domain.area.dto.AdongCenterDTO">
+		SELECT adongCd AS adongCd, ctprvnNm AS sido, signguNm AS sigungu, adongNm AS dong,
+			center_lat AS centerLat, center_lng AS centerLng
+		FROM area_center_dong
+		WHERE ctprvnNm = #{sido} AND signguNm = #{sigungu} AND adongNm = #{dong}
+	</select>
+
+
+</mapper>

@@ -7,7 +7,7 @@ import com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
 
-public interface AdmAreaDAO {
+public interface AreaReadDAO {
 	List<AreaCountDTO> listSidoStats();
     List<AreaCountDTO> listSigunguStats(String sido);
 	List<AdongWithCenterDTO> listDongStats(String sido, String sigungu);

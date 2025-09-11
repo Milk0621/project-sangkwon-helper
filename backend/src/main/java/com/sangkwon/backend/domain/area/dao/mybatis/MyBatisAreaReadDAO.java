@@ -4,20 +4,20 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.sangkwon.backend.domain.area.dao.AdmAreaDAO;
+import com.sangkwon.backend.domain.area.dao.AreaReadDAO;
 import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
-import com.sangkwon.backend.domain.area.mapper.mybatis.AdmAreaMapper;
+import com.sangkwon.backend.domain.area.mapper.mybatis.AreaReadMapper;
 
 @Repository
-public class MyBatisAdmAreaDAO implements AdmAreaDAO {
+public class MyBatisAreaReadDAO implements AreaReadDAO {
 	
-	private final AdmAreaMapper mapper;
+	private final AreaReadMapper mapper;
 	
 	
-	public MyBatisAdmAreaDAO(AdmAreaMapper mapper) {
+	public MyBatisAreaReadDAO(AreaReadMapper mapper) {
 		this.mapper = mapper;
 	}
 
