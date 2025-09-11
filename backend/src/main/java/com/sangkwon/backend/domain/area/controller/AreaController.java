@@ -6,12 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sangkwon.backend.domain.area.dto.AdongCenterDTO;
+import com.sangkwon.backend.domain.area.dto.AdongStatsDTO;
 import com.sangkwon.backend.domain.area.dto.AdongWithCenterDTO;
 import com.sangkwon.backend.domain.area.dto.AreaCountDTO;
 import com.sangkwon.backend.domain.area.dto.SigunguCenterDTO;
+import com.sangkwon.backend.domain.area.service.AdongStatsService;
 import com.sangkwon.backend.domain.area.service.AreaReadService;
 
 @RestController
@@ -19,9 +22,11 @@ import com.sangkwon.backend.domain.area.service.AreaReadService;
 public class AreaController {
 	
 	private final AreaReadService areaReadService;
+	private final AdongStatsService adongStatsService;
 
-	public AreaController(AreaReadService areaReadService) {
+	public AreaController(AreaReadService areaReadService, AdongStatsService adongStatsService) {
 		this.areaReadService = areaReadService;
+		this.adongStatsService = adongStatsService;
 	}
 	
 	// 시/도 목록 + 수
@@ -59,5 +64,21 @@ public class AreaController {
         }
     	return ResponseEntity.ok(dto);
     }
+    
+    // 
+    @GetMapping("/{sido}/{sigungu}/{dong}/stats")
+    public ResponseEntity<AdongStatsDTO> stats(@PathVariable String sido,
+            @PathVariable String sigungu,
+            @PathVariable String dong,
+            @RequestParam(defaultValue = "6") int topN) {
+	AdongStatsDTO dto = adongStatsService.getStats(
+		urlDecode(sido), urlDecode(sigungu), urlDecode(dong), topN);
+		return (dto == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(dto);
+	}
+	
+	private String urlDecode(String v) {
+		try { return java.net.URLDecoder.decode(v, java.nio.charset.StandardCharsets.UTF_8); }
+		catch (Exception e) { return v; }
+	}
 
 }

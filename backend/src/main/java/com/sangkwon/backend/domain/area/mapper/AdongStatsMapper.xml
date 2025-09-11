@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sangkwon.backend.domain.area.mapper.AdongStatsMapper">
+
+	<select id="findAdongCd" resultType="string">
+		SELECT a.adongCd
+		FROM adm_area a
+		WHERE a.ctprvnNm = #{sido}
+			AND a.signguNm = #{sigungu}
+			AND a.adongNm  = #{dong}
+		LIMIT 1
+	</select>
+
+	<select id="selectTotalStores" resultType="int">
+		SELECT COALESCE(SUM(p.store_cnt), 0)
+		FROM emd_upjong_counts p
+		WHERE p.adongCd = #{adongCd}
+	</select>
+
+	<select id="selectCategoryDistribution"
+          resultType="com.sangkwon.backend.domain.area.dto.CategoryStatDTO">
+		SELECT
+			p.indsMclsCd   AS code,
+			c.indsMclsNm   AS name,
+			p.sum_cnt      AS count,
+			ROUND(p.sum_cnt / NULLIF(t.total_cnt,0) * 100, 1) AS ratio
+		FROM (
+			SELECT indsMclsCd, SUM(store_cnt) AS sum_cnt
+			FROM emd_upjong_counts
+			WHERE adongCd = #{adongCd}
+			GROUP BY indsMclsCd
+		) p
+		JOIN raw_category c ON c.indsMclsCd = p.indsMclsCd
+		CROSS JOIN (
+			SELECT COALESCE(SUM(store_cnt),0) AS total_cnt
+			FROM emd_upjong_counts
+			WHERE adongCd = #{adongCd}
+		) t
+		ORDER BY p.sum_cnt DESC
+	</select>
+
+</mapper>
