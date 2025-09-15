@@ -42,26 +42,11 @@ function AdongDetail() {
         fetchAdongStats();
     }, [])
 
-    const RoundedBar = (props) => {
-        const { x, y, width, height, fill } = props;
-        return (
-            <Rectangle
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            radius={[8, 8, 0, 0]}
-            fill={fill}
-            filter="url(#barShadow)"
-            />
-        );
-    };
-
     return (
         <div className={styles.adongDtailBg}>
-            <div className="wrap">
+            <div className={`wrap ${styles.pageWrap}`}>
                 <div className={styles.title}>
-                    <button>돌아가기</button>
+                    <button>&larr; 돌아가기</button>
                     <h2>{sigungu} {dong}</h2>
                 </div>
                 <span>상세한 상권 현황과 트렌드를 확인하세요</span>
@@ -133,7 +118,18 @@ function AdongDetail() {
                     <div className={styles.contentBox}>
                         <div>
                             <p>상가 종류별 백분율</p>
-                            <span>상위 7개 데이터</span>
+                            <span>전체 업종 기준 데이터</span>
+                        </div>
+                        <div className={styles.ratioList}>
+                            {distribution.map((item, idx)=>(
+                                <div className={styles.storesRatio}>
+                                    <div>
+                                        <p>{item.name}</p>
+                                        <span>{item.ratio}%</span>
+                                    </div>
+                                    <p>{item.count}개</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

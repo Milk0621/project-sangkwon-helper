@@ -3,6 +3,10 @@
     text-align: left;
 }
 
+.pageWrap {
+    padding: 2rem 0;
+}
+
 .adongDtailBg span {
     color: #5d6871;
 }
@@ -13,7 +17,10 @@
 }
 
 .title button {
-    padding: 0;
+    padding: 0 .5rem;
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    background-color: #fff;
 }
 
 .title h2 {
@@ -78,3 +85,31 @@
 .chartBox :global(svg:focus) {
   outline: none !important;
 }
+
+.ratioList {
+    margin-top: 0.75rem;       /* 헤더와 간격 */
+    max-height: 436px;        /* ≈ 아이템 5개 높이 + 간격 (프로젝트 폰트/패딩에 맞게 조절) */
+    overflow-y: auto;
+    padding-right: 4px;        /* 스크롤바와 내용 간 살짝 여백 */
+}
+
+.contentBox .storesRatio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--light-gray);
+    padding: .85rem 1rem;
+    border-radius: .5rem;
+    margin: .5rem 0;
+}
+
+.contentBox .storesRatio p {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.contentBox .storesRatio span {
+    font-size: .85rem;
+}
+
