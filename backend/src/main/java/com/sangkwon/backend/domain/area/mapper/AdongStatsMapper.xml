@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sangkwon.backend.domain.area.mapper.AdongStatsMapper">
+<mapper namespace="com.sangkwon.backend.domain.area.mapper.mybatis.AdongStatsMapper">
 
 	<select id="findAdongCd" resultType="string">
 		SELECT a.adongCd
@@ -31,7 +31,11 @@
 			WHERE adongCd = #{adongCd}
 			GROUP BY indsMclsCd
 		) p
-		JOIN raw_category c ON c.indsMclsCd = p.indsMclsCd
+		JOIN (
+			SELECT rc.indsMclsCd, MAX(rc.indsMclsNm) AS indsMclsNm
+			FROM raw_category rc
+			GROUP BY rc.indsMclsCd
+		) c ON c.indsMclsCd = p.indsMclsCd
 		CROSS JOIN (
 			SELECT COALESCE(SUM(store_cnt),0) AS total_cnt
 			FROM emd_upjong_counts
