@@ -1,12 +1,15 @@
 import styles from "./AdongDetail.module.css";
 import api from "../../api/api";
 import { useEffect, useMemo, useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, Rectangle } from "recharts";
 
 function AdongDetail() {
+    const BAR_COLORS = ["#7C83FD", "#96BAFF", "#7BD3EA", "#A1E3A1", "#FFD166", "#FF8FA3"]; // 원하는 팔레트
 
     const [totalStores, setTotalStores] = useState("");
-    const [topCategory, setTopCategory] = useState("-");
+    const [topCategory, setTopCategory] = useState("");
     const [distribution, setDistribution] = useState([]);
+    const [top6, setTop6] = useState([]);
 
     // URL 쿼리에서 지역 파라미터 추출 (React Router 없이도 동작)
     const { sido, sigungu, dong } = useMemo(()=>{
@@ -32,11 +35,27 @@ function AdongDetail() {
 
             setTotalStores(data.totalStores);
             setTopCategory(data.topCategoryName);
-
+            setDistribution(data.distribution);
+            setTop6(data.top6);
         }
 
         fetchAdongStats();
     }, [])
+
+    const RoundedBar = (props) => {
+        const { x, y, width, height, fill } = props;
+        return (
+            <Rectangle
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            radius={[8, 8, 0, 0]}
+            fill={fill}
+            filter="url(#barShadow)"
+            />
+        );
+    };
 
     return (
         <div className={styles.adongDtailBg}>
@@ -71,6 +90,44 @@ function AdongDetail() {
                         <div>
                             <p>업종별 상가 현황</p>
                             <span>전체 {totalStores.toLocaleString()}개 상가 기준</span>
+                        </div>
+                        <div className={styles.chartBox}>
+                            <ResponsiveContainer width="100%" height={400}>
+                                <BarChart
+                                    data={top6}
+                                    barSize={85}               // 막대 두께
+                                    margin={{ top: 8, right: 20, left: 0, bottom: 0 }}
+                                >
+                                    <CartesianGrid vertical={false} stroke="#e9eef5" />
+                                    <XAxis
+                                        dataKey="name"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 12, fill: "#64748b" }}
+                                        interval={0}
+                                    />
+                                    <YAxis
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 12, fill: "#94a3b8" }}
+                                        width={36}
+                                    />
+                                    <Tooltip
+                                        cursor={{ fill: "rgba(0,0,0,0.04)" }}
+                                        formatter={(v) => v?.toLocaleString()}
+                                        contentStyle={{
+                                            borderRadius: 8,
+                                            border: "1px solid #e2e8f0",
+                                            boxShadow: "0 8px 24px rgba(0,0,0,0.08)"
+                                        }}
+                                    />
+                                    <Bar dataKey="count" stroke="none" radius={[6, 6, 0, 0]}>
+                                        {top6.map((_, i) => (
+                                            <Cell key={i} fill={BAR_COLORS[i % BAR_COLORS.length]} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
                         </div>
                     </div>
                     <div className={styles.contentBox}>

@@ -37,7 +37,7 @@
 }
 
 .contentTop .contentBox p {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
 }
@@ -60,4 +60,21 @@
 
 .contentMid .contentBox span {
     font-size: .95rem;
+}
+
+/* 차트 */
+.chartBox {
+    margin: 1.5rem 0;
+}
+
+.chartBox :global(.recharts-wrapper),
+.chartBox :global(.recharts-surface),
+.chartBox :global(svg) {
+  outline: none !important;
+}
+.chartBox:focus,
+.chartBox :global(.recharts-wrapper:focus),
+.chartBox :global(.recharts-surface:focus),
+.chartBox :global(svg:focus) {
+  outline: none !important;
 }
