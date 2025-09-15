@@ -67,10 +67,10 @@ public class AreaController {
     
     // 
     @GetMapping("/{sido}/{sigungu}/{dong}/stats")
-    public ResponseEntity<AdongStatsDTO> stats(@PathVariable String sido,
-            @PathVariable String sigungu,
-            @PathVariable String dong,
-            @RequestParam(defaultValue = "6") int topN) {
+    public ResponseEntity<AdongStatsDTO> stats(@PathVariable("sido") String sido,
+            @PathVariable("sigungu") String sigungu,
+            @PathVariable("dong") String dong,
+            @RequestParam(name = "topN", defaultValue = "6") int topN) {
 	AdongStatsDTO dto = adongStatsService.getStats(
 		urlDecode(sido), urlDecode(sigungu), urlDecode(dong), topN);
 		return (dto == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(dto);
