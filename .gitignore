@@ -40,3 +40,4 @@ out/
 .vscode/
 analysis-server/data/*
 analysis-server/mnt/*
+/.metadata/
