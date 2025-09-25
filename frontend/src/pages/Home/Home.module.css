@@ -29,6 +29,7 @@
 
 .introduceBox {
     padding: 6rem 0;
+    background-color: var(--light-gray);
 }
 
 .introduce {
@@ -54,8 +55,8 @@
     margin: 1.85rem 0;
 }
 
-.introduceCon h5 { margin: 0; font-weight: 600;}
-.introduceCon p { margin: 0; color: #555;}
+.introduceCon h5 { margin: 0; font-weight: 600; text-align: left;}
+.introduceCon p { margin: 0; color: #555; text-align: left;}
 
 .icon {
     width: 48px;
@@ -77,6 +78,33 @@
 .icon3 { background-color: #8b5cf6; }
 .icon3::before { content: "\f0eb"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-style: normal; } /* lightbulb */
 
-.introduceTxt {
-    text-align: left;
+.functionGuideBox {
+    padding: 6rem 0;
 }
+
+.functionGuide {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.functionGuideCon {
+    background-color: var(--light-gray);
+    border-radius: .5rem;
+    padding: 2.5rem 1.7rem;
+}
+
+.functionGuideCon h5 { margin: 1rem 0; font-weight: 600;}
+.functionGuideCon p { margin: 0; color: #555;}
+
+.functionGuide .icon {
+    margin: 0 auto;
+}
+
+.icon4 { background-color: #3b82f6; }
+.icon4::before { content: "\f1ad"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-style: normal; }
+
+.icon5 { background-color: #10b981; }
+.icon5::before { content: "\f0c0"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-style: normal; }
+
+.icon6 { background-color: #8b5cf6; }
+.icon6::before { content: "\f091"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-style: normal; }
