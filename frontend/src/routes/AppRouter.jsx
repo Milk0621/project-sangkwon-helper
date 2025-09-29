@@ -7,6 +7,7 @@ import PrivateRoute from '../Auth/PrivateRoute';
 import Guide from '../pages/Guide/Guide';
 import Analysis from '../pages/Analysis/Analysis';
 import AdongDetail from '../pages/AdongDetail/AdongDetail';
+import MyPage from '../pages/MyPage/MyPage';
 
 function AppRouter() {
     return (
@@ -21,7 +22,7 @@ function AppRouter() {
                         <Route path="/map" element={<Map />} />
                         <Route path="/map/:sido/:sigungu/:dong" element={<AdongDetail />} />
                     </Route>
-
+                    <Route path="/mypage" element={<MyPage />} />
                     <Route path="/guide" element={<Guide />} />
                 </Route>
             </Routes>

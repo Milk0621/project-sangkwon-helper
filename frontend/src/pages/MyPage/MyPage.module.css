@@ -1,0 +1,188 @@
+.mypageBanner {
+    background-color: var(--main-blue);
+    color: #fff;
+    text-align: left;
+    padding: 4.5rem 0;
+}
+.mypageBanner h1 {
+    font-weight: 700;
+    margin: 0;
+}
+.body {
+  background: #f8fafc;
+  padding: 2rem 0 3rem;
+}
+.bodyCon {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+}
+
+/* Left column */
+.leftCol {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+/* Profile card */
+.profileCard {
+  padding: 1.25rem;
+}
+.avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--main-blue);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  margin: 0 auto .75rem;
+}
+.profileMeta {
+  text-align: center;
+  margin-bottom: .75rem;
+}
+.profileName {
+  display: block;
+  font-size: 1.0625rem;
+}
+.profileEmail {
+  font-size: .9375rem;
+}
+
+/* Sidebar nav */
+.nav {
+  display: grid;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+.navBtn {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  width: 100%;
+  padding: .75rem .9rem;
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: .95rem;
+}
+.navBtn i {
+  width: 18px;
+  text-align: center;
+}
+.navBtn:hover {
+  background: #f3f4f6;
+}
+.active {
+  background: #eaf4ff;
+}
+
+/* Stats card */
+.statsCard {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.25rem;
+}
+.statsCard h3 {
+  margin: 0 0 .75rem 0;
+  font-size: 1rem;
+}
+.statsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .5rem;
+}
+.statsList li {
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem 0;
+  border-top: 1px dashed var(--line);
+}
+.statsList li:first-child {
+  border-top: 0;
+}
+.statsList span {
+  color: var(--muted);
+}
+.statsList strong {
+  font-weight: 700;
+}
+
+/* Right column */
+.rightCol {
+  min-width: 0;
+}
+
+/* Top bar */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .75rem;
+}
+.panelHeader h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+/* Primary button */
+.primaryBtn {
+  background: var(--main-blue);
+  color: #fff;
+  border: 0;
+  border-radius: 10px;
+  padding: .6rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.primaryBtn:hover {
+  filter: brightness(.95);
+}
+
+/* Info card */
+.infoCard {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.25rem;
+}
+.field {
+  display: grid;
+  gap: .4rem;
+}
+.field label {
+  font-size: .9rem;
+  color: var(--muted);
+}
+.field input {
+  height: 44px;
+  padding: 0 .9rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f9fafb;
+  outline: none;
+  font-size: .95rem;
+}
+
+/* Placeholder sections (다른 탭용) */
+.placeholder {
+  margin-top: 1rem;
+  background: #fff;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 1.25rem;
+  color: var(--muted);
+}
